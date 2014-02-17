@@ -1,0 +1,182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>package openkms.gp;<a name="line.1"></a>
+<span class="sourceLineNo">002</span><a name="line.2"></a>
+<span class="sourceLineNo">003</span>import java.util.Arrays;<a name="line.3"></a>
+<span class="sourceLineNo">004</span><a name="line.4"></a>
+<span class="sourceLineNo">005</span>public final class TLVUtils {<a name="line.5"></a>
+<span class="sourceLineNo">006</span><a name="line.6"></a>
+<span class="sourceLineNo">007</span>        static short skipTag(byte[] data, short offset, byte tag) {<a name="line.7"></a>
+<span class="sourceLineNo">008</span>                if (data[offset] == tag)<a name="line.8"></a>
+<span class="sourceLineNo">009</span>                        ++offset;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>                return offset;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>        }<a name="line.11"></a>
+<span class="sourceLineNo">012</span><a name="line.12"></a>
+<span class="sourceLineNo">013</span>        static short skip_tag_or_throw(byte[] data, short offset, byte tag) {<a name="line.13"></a>
+<span class="sourceLineNo">014</span>                short skip = skipTag(data, offset, tag);<a name="line.14"></a>
+<span class="sourceLineNo">015</span>                if (skip == offset)<a name="line.15"></a>
+<span class="sourceLineNo">016</span>                        throw new RuntimeException("Expected tag " + Integer.toHexString(tag) + " but had " + Integer.toHexString(data[offset]));<a name="line.16"></a>
+<span class="sourceLineNo">017</span>                return skip;<a name="line.17"></a>
+<span class="sourceLineNo">018</span>        }<a name="line.18"></a>
+<span class="sourceLineNo">019</span><a name="line.19"></a>
+<span class="sourceLineNo">020</span>        static short get_length(byte[] data, short offset) {<a name="line.20"></a>
+<span class="sourceLineNo">021</span>                return (short) (data[offset] &amp; 0x00FF);<a name="line.21"></a>
+<span class="sourceLineNo">022</span>        }<a name="line.22"></a>
+<span class="sourceLineNo">023</span><a name="line.23"></a>
+<span class="sourceLineNo">024</span>        static short skipLength(byte[] data, short offset) {<a name="line.24"></a>
+<span class="sourceLineNo">025</span>                return (short) (offset + 1);<a name="line.25"></a>
+<span class="sourceLineNo">026</span>        }<a name="line.26"></a>
+<span class="sourceLineNo">027</span><a name="line.27"></a>
+<span class="sourceLineNo">028</span>        static int get_byte_value(byte[] data, short offset) {<a name="line.28"></a>
+<span class="sourceLineNo">029</span>                return (short) (data[offset] &amp; 0x00FF);<a name="line.29"></a>
+<span class="sourceLineNo">030</span>        }<a name="line.30"></a>
+<span class="sourceLineNo">031</span><a name="line.31"></a>
+<span class="sourceLineNo">032</span>        static short expectTag(byte[] data, short offset, byte tag) {<a name="line.32"></a>
+<span class="sourceLineNo">033</span>                if (data[offset] == tag)<a name="line.33"></a>
+<span class="sourceLineNo">034</span>                        ++offset;<a name="line.34"></a>
+<span class="sourceLineNo">035</span>                return offset;<a name="line.35"></a>
+<span class="sourceLineNo">036</span>        }<a name="line.36"></a>
+<span class="sourceLineNo">037</span><a name="line.37"></a>
+<span class="sourceLineNo">038</span>        static short skipTagAndLength(byte[] data, short offset, byte tag) {<a name="line.38"></a>
+<span class="sourceLineNo">039</span>                offset = expectTag(data, offset, tag);<a name="line.39"></a>
+<span class="sourceLineNo">040</span>                offset = skipLength(data, offset);<a name="line.40"></a>
+<span class="sourceLineNo">041</span>                return offset;<a name="line.41"></a>
+<span class="sourceLineNo">042</span>        }<a name="line.42"></a>
+<span class="sourceLineNo">043</span><a name="line.43"></a>
+<span class="sourceLineNo">044</span>        static short getTagLength(byte[] data, short offset) {<a name="line.44"></a>
+<span class="sourceLineNo">045</span>                ++offset; // FIXME: jumpOverTag<a name="line.45"></a>
+<span class="sourceLineNo">046</span>                return getLength(data, offset);<a name="line.46"></a>
+<span class="sourceLineNo">047</span>        }<a name="line.47"></a>
+<span class="sourceLineNo">048</span><a name="line.48"></a>
+<span class="sourceLineNo">049</span>        static int getTLVTag(byte[] data, short offset) {<a name="line.49"></a>
+<span class="sourceLineNo">050</span>                return data[offset] &amp; 0xFF;<a name="line.50"></a>
+<span class="sourceLineNo">051</span>        }<a name="line.51"></a>
+<span class="sourceLineNo">052</span><a name="line.52"></a>
+<span class="sourceLineNo">053</span>        static String getTLVValueAsHex(byte[] data, short offset) {<a name="line.53"></a>
+<span class="sourceLineNo">054</span>                short len = getTagLength(data, offset);<a name="line.54"></a>
+<span class="sourceLineNo">055</span>                return LoggingCardTerminal.encodeHexString(Arrays.copyOfRange(data, offset + 2, offset + 2 + len));<a name="line.55"></a>
+<span class="sourceLineNo">056</span>        }<a name="line.56"></a>
+<span class="sourceLineNo">057</span><a name="line.57"></a>
+<span class="sourceLineNo">058</span>        static byte[] getTLVValueAsBytes(byte[] data, short offset) {<a name="line.58"></a>
+<span class="sourceLineNo">059</span>                short len = getTagLength(data, offset);<a name="line.59"></a>
+<span class="sourceLineNo">060</span>                return Arrays.copyOfRange(data, offset + 2, offset + 2 + len);<a name="line.60"></a>
+<span class="sourceLineNo">061</span>        }<a name="line.61"></a>
+<span class="sourceLineNo">062</span><a name="line.62"></a>
+<span class="sourceLineNo">063</span>        static byte[] getTLVAsBytes(byte[] data, short offset) {<a name="line.63"></a>
+<span class="sourceLineNo">064</span>                short len = getTagLength(data, offset);<a name="line.64"></a>
+<span class="sourceLineNo">065</span>                return Arrays.copyOfRange(data, offset, offset + 2 + len);<a name="line.65"></a>
+<span class="sourceLineNo">066</span>        }<a name="line.66"></a>
+<span class="sourceLineNo">067</span><a name="line.67"></a>
+<span class="sourceLineNo">068</span>        static int getTLVValueOffset(byte[] data, short offset) {<a name="line.68"></a>
+<span class="sourceLineNo">069</span>                // FIXME<a name="line.69"></a>
+<span class="sourceLineNo">070</span>                return offset + 2;<a name="line.70"></a>
+<span class="sourceLineNo">071</span>        }<a name="line.71"></a>
+<span class="sourceLineNo">072</span><a name="line.72"></a>
+<span class="sourceLineNo">073</span>        static short getTagLength(byte[] data, short offset, byte tag) {<a name="line.73"></a>
+<span class="sourceLineNo">074</span>                offset = expectTag(data, offset, tag);<a name="line.74"></a>
+<span class="sourceLineNo">075</span>                offset = skipLength(data, offset);<a name="line.75"></a>
+<span class="sourceLineNo">076</span>                return offset;<a name="line.76"></a>
+<span class="sourceLineNo">077</span>        }<a name="line.77"></a>
+<span class="sourceLineNo">078</span><a name="line.78"></a>
+<span class="sourceLineNo">079</span>        static short getLength(byte[] data, short offset) {<a name="line.79"></a>
+<span class="sourceLineNo">080</span>                return (short) (data[offset] &amp; 0x00FF);<a name="line.80"></a>
+<span class="sourceLineNo">081</span>        }<a name="line.81"></a>
+<span class="sourceLineNo">082</span><a name="line.82"></a>
+<span class="sourceLineNo">083</span>        static short skipAnyTag(byte[] data, short offset) {<a name="line.83"></a>
+<span class="sourceLineNo">084</span>                ++offset; // FIXME<a name="line.84"></a>
+<span class="sourceLineNo">085</span>                return (short) (offset + getLength(data, offset) + 1);<a name="line.85"></a>
+<span class="sourceLineNo">086</span>        }<a name="line.86"></a>
+<span class="sourceLineNo">087</span><a name="line.87"></a>
+<span class="sourceLineNo">088</span>        static short findTag(byte[] data, short offset, byte tag) {<a name="line.88"></a>
+<span class="sourceLineNo">089</span>                while (true) {<a name="line.89"></a>
+<span class="sourceLineNo">090</span>                        if (data[offset] == tag) {<a name="line.90"></a>
+<span class="sourceLineNo">091</span>                                return offset;<a name="line.91"></a>
+<span class="sourceLineNo">092</span>                        } else {<a name="line.92"></a>
+<span class="sourceLineNo">093</span>                                offset = skipAnyTag(data, offset);<a name="line.93"></a>
+<span class="sourceLineNo">094</span>                        }<a name="line.94"></a>
+<span class="sourceLineNo">095</span>                }<a name="line.95"></a>
+<span class="sourceLineNo">096</span>        }<a name="line.96"></a>
+<span class="sourceLineNo">097</span><a name="line.97"></a>
+<span class="sourceLineNo">098</span>        // Given a MSB byte array with a length, increment it by one.<a name="line.98"></a>
+<span class="sourceLineNo">099</span>        static void buffer_increment(byte[] buffer, short offset, short len) {<a name="line.99"></a>
+<span class="sourceLineNo">100</span>                if (len &lt; 1)<a name="line.100"></a>
+<span class="sourceLineNo">101</span>                        return;<a name="line.101"></a>
+<span class="sourceLineNo">102</span>                for (short i = (short) (offset + len - 1); i &gt;= offset; i--) {<a name="line.102"></a>
+<span class="sourceLineNo">103</span>                        if (buffer[i] != (byte) 0xFF) {<a name="line.103"></a>
+<span class="sourceLineNo">104</span>                                buffer[i]++;<a name="line.104"></a>
+<span class="sourceLineNo">105</span>                                break;<a name="line.105"></a>
+<span class="sourceLineNo">106</span>                        } else<a name="line.106"></a>
+<span class="sourceLineNo">107</span>                                buffer[i] = (byte) 0x00;<a name="line.107"></a>
+<span class="sourceLineNo">108</span>                }<a name="line.108"></a>
+<span class="sourceLineNo">109</span>        }<a name="line.109"></a>
+<span class="sourceLineNo">110</span>}<a name="line.110"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>
