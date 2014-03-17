@@ -260,192 +260,195 @@
 <span class="sourceLineNo">252</span>                                        if (args.has(CMD_INFO) || args.has(OPT_VERBOSE)) {<a name="line.252"></a>
 <span class="sourceLineNo">253</span>                                                System.out.println("Reader: " + reader.getName());<a name="line.253"></a>
 <span class="sourceLineNo">254</span>                                                System.out.println("ATR: " + GPUtils.byteArrayToString(card.getATR().getBytes()));<a name="line.254"></a>
-<span class="sourceLineNo">255</span>                                        }<a name="line.255"></a>
-<span class="sourceLineNo">256</span><a name="line.256"></a>
-<span class="sourceLineNo">257</span>                                        // Talk to the card manager (can be null)<a name="line.257"></a>
-<span class="sourceLineNo">258</span>                                        gp.select((AID) args.valueOf(OPT_SDAID));<a name="line.258"></a>
+<span class="sourceLineNo">255</span>                                                System.out.println("More information about your card:");<a name="line.255"></a>
+<span class="sourceLineNo">256</span>                                                System.out.println("    http://smartcard-atr.appspot.com/parse?ATR="+GPUtils.byteArrayToString(card.getATR().getBytes()));<a name="line.256"></a>
+<span class="sourceLineNo">257</span>                                                System.out.println();<a name="line.257"></a>
+<span class="sourceLineNo">258</span>                                        }<a name="line.258"></a>
 <span class="sourceLineNo">259</span><a name="line.259"></a>
-<span class="sourceLineNo">260</span>                                        // Fetch some possibly interesting data<a name="line.260"></a>
-<span class="sourceLineNo">261</span>                                        if (args.has(CMD_INFO)) {<a name="line.261"></a>
-<span class="sourceLineNo">262</span>                                                System.out.println("***** Card info:");<a name="line.262"></a>
-<span class="sourceLineNo">263</span>                                                GlobalPlatformData.print_card_info(gp);<a name="line.263"></a>
-<span class="sourceLineNo">264</span>                                        }<a name="line.264"></a>
-<span class="sourceLineNo">265</span><a name="line.265"></a>
-<span class="sourceLineNo">266</span>                                        // Authenticate, only if needed<a name="line.266"></a>
-<span class="sourceLineNo">267</span>                                        if (args.has(CMD_LIST) || args.has(CMD_INSTALL) || args.has(CMD_DELETE) || args.has(CMD_CREATE)<a name="line.267"></a>
-<span class="sourceLineNo">268</span>                                                        || args.has(CMD_LOCK) || args.has(CMD_UNLOCK) || args.has(CMD_MAKE_DEFAULT)) {<a name="line.268"></a>
-<span class="sourceLineNo">269</span><a name="line.269"></a>
-<span class="sourceLineNo">270</span>                                                // Override default mode if needed.<a name="line.270"></a>
-<span class="sourceLineNo">271</span>                                                if (args.has(OPT_MODE)) {<a name="line.271"></a>
-<span class="sourceLineNo">272</span>                                                        gp.defaultMode.clear();<a name="line.272"></a>
-<span class="sourceLineNo">273</span>                                                        gp.defaultMode.add((GlobalPlatform.APDUMode) args.valueOf(OPT_MODE));<a name="line.273"></a>
-<span class="sourceLineNo">274</span>                                                }<a name="line.274"></a>
-<span class="sourceLineNo">275</span><a name="line.275"></a>
-<span class="sourceLineNo">276</span>                                                // Possibly brick the card now, if keys don't match.<a name="line.276"></a>
-<span class="sourceLineNo">277</span>                                                gp.openSecureChannel(ks, GlobalPlatform.SCP_ANY, gp.defaultMode);<a name="line.277"></a>
+<span class="sourceLineNo">260</span>                                        // Talk to the card manager (can be null)<a name="line.260"></a>
+<span class="sourceLineNo">261</span>                                        gp.select((AID) args.valueOf(OPT_SDAID));<a name="line.261"></a>
+<span class="sourceLineNo">262</span><a name="line.262"></a>
+<span class="sourceLineNo">263</span>                                        // Fetch some possibly interesting data<a name="line.263"></a>
+<span class="sourceLineNo">264</span>                                        if (args.has(CMD_INFO)) {<a name="line.264"></a>
+<span class="sourceLineNo">265</span>                                                System.out.println("***** Card info:");<a name="line.265"></a>
+<span class="sourceLineNo">266</span>                                                GlobalPlatformData.print_card_info(gp);<a name="line.266"></a>
+<span class="sourceLineNo">267</span>                                        }<a name="line.267"></a>
+<span class="sourceLineNo">268</span><a name="line.268"></a>
+<span class="sourceLineNo">269</span>                                        // Authenticate, only if needed<a name="line.269"></a>
+<span class="sourceLineNo">270</span>                                        if (args.has(CMD_LIST) || args.has(CMD_INSTALL) || args.has(CMD_DELETE) || args.has(CMD_CREATE)<a name="line.270"></a>
+<span class="sourceLineNo">271</span>                                                        || args.has(CMD_LOCK) || args.has(CMD_UNLOCK) || args.has(CMD_MAKE_DEFAULT)) {<a name="line.271"></a>
+<span class="sourceLineNo">272</span><a name="line.272"></a>
+<span class="sourceLineNo">273</span>                                                // Override default mode if needed.<a name="line.273"></a>
+<span class="sourceLineNo">274</span>                                                if (args.has(OPT_MODE)) {<a name="line.274"></a>
+<span class="sourceLineNo">275</span>                                                        gp.defaultMode.clear();<a name="line.275"></a>
+<span class="sourceLineNo">276</span>                                                        gp.defaultMode.add((GlobalPlatform.APDUMode) args.valueOf(OPT_MODE));<a name="line.276"></a>
+<span class="sourceLineNo">277</span>                                                }<a name="line.277"></a>
 <span class="sourceLineNo">278</span><a name="line.278"></a>
-<span class="sourceLineNo">279</span>                                                // --delete &lt;aid&gt; or --delete --default<a name="line.279"></a>
-<span class="sourceLineNo">280</span>                                                if (args.has(CMD_DELETE)) {<a name="line.280"></a>
-<span class="sourceLineNo">281</span>                                                        if (args.has(OPT_DEFAULT)) {<a name="line.281"></a>
-<span class="sourceLineNo">282</span>                                                                gp.uninstallDefaultSelected(args.has(OPT_DELETEDEPS));<a name="line.282"></a>
-<span class="sourceLineNo">283</span>                                                        }<a name="line.283"></a>
-<span class="sourceLineNo">284</span>                                                        @SuppressWarnings("unchecked")<a name="line.284"></a>
-<span class="sourceLineNo">285</span>                                                        List&lt;AID&gt; aids = (List&lt;AID&gt;) args.valuesOf(CMD_DELETE);<a name="line.285"></a>
-<span class="sourceLineNo">286</span>                                                        for (AID aid: aids) {<a name="line.286"></a>
-<span class="sourceLineNo">287</span>                                                                try {<a name="line.287"></a>
-<span class="sourceLineNo">288</span>                                                                        gp.deleteAID(aid, args.has(OPT_DELETEDEPS));<a name="line.288"></a>
-<span class="sourceLineNo">289</span>                                                                } catch (GPException e) {<a name="line.289"></a>
-<span class="sourceLineNo">290</span>                                                                        if (!gp.getRegistry().allAIDs().contains(aid)) {<a name="line.290"></a>
-<span class="sourceLineNo">291</span>                                                                                System.out.println("Could not delete AID (not present on card): " + aid);<a name="line.291"></a>
-<span class="sourceLineNo">292</span>                                                                        } else {<a name="line.292"></a>
-<span class="sourceLineNo">293</span>                                                                                System.out.println("Could not delete AID: " + aid);<a name="line.293"></a>
-<span class="sourceLineNo">294</span>                                                                                if (e.sw == 0x6985) {<a name="line.294"></a>
-<span class="sourceLineNo">295</span>                                                                                        System.out.println("TIP: Maybe try with --" + OPT_DELETEDEPS);<a name="line.295"></a>
-<span class="sourceLineNo">296</span>                                                                                }<a name="line.296"></a>
-<span class="sourceLineNo">297</span>                                                                                throw e;<a name="line.297"></a>
-<span class="sourceLineNo">298</span>                                                                        }<a name="line.298"></a>
-<span class="sourceLineNo">299</span>                                                                }<a name="line.299"></a>
-<span class="sourceLineNo">300</span>                                                        }<a name="line.300"></a>
-<span class="sourceLineNo">301</span>                                                }<a name="line.301"></a>
-<span class="sourceLineNo">302</span><a name="line.302"></a>
-<span class="sourceLineNo">303</span>                                                // --install &lt;applet.cap&gt;<a name="line.303"></a>
-<span class="sourceLineNo">304</span>                                                if (args.has(CMD_INSTALL)) {<a name="line.304"></a>
-<span class="sourceLineNo">305</span>                                                        AID def = gp.getRegistry().getDefaultSelectedPackageAID();<a name="line.305"></a>
-<span class="sourceLineNo">306</span>                                                        if (def != null &amp;&amp; args.has(OPT_DEFAULT)) {<a name="line.306"></a>
-<span class="sourceLineNo">307</span>                                                                if (args.has(OPT_REINSTALL)) {<a name="line.307"></a>
-<span class="sourceLineNo">308</span>                                                                        gp.verbose("Removing current default applet/package");<a name="line.308"></a>
-<span class="sourceLineNo">309</span>                                                                        // Remove all instances of default selected app package<a name="line.309"></a>
-<span class="sourceLineNo">310</span>                                                                        gp.deleteAID(def, true);<a name="line.310"></a>
-<span class="sourceLineNo">311</span>                                                                }<a name="line.311"></a>
-<span class="sourceLineNo">312</span>                                                        }<a name="line.312"></a>
-<span class="sourceLineNo">313</span><a name="line.313"></a>
-<span class="sourceLineNo">314</span>                                                        File capfile = (File) args.valueOf(CMD_INSTALL);<a name="line.314"></a>
-<span class="sourceLineNo">315</span>                                                        CapFile instcap = new CapFile(new FileInputStream(capfile));<a name="line.315"></a>
+<span class="sourceLineNo">279</span>                                                // Possibly brick the card now, if keys don't match.<a name="line.279"></a>
+<span class="sourceLineNo">280</span>                                                gp.openSecureChannel(ks, GlobalPlatform.SCP_ANY, gp.defaultMode);<a name="line.280"></a>
+<span class="sourceLineNo">281</span><a name="line.281"></a>
+<span class="sourceLineNo">282</span>                                                // --delete &lt;aid&gt; or --delete --default<a name="line.282"></a>
+<span class="sourceLineNo">283</span>                                                if (args.has(CMD_DELETE)) {<a name="line.283"></a>
+<span class="sourceLineNo">284</span>                                                        if (args.has(OPT_DEFAULT)) {<a name="line.284"></a>
+<span class="sourceLineNo">285</span>                                                                gp.uninstallDefaultSelected(args.has(OPT_DELETEDEPS));<a name="line.285"></a>
+<span class="sourceLineNo">286</span>                                                        }<a name="line.286"></a>
+<span class="sourceLineNo">287</span>                                                        @SuppressWarnings("unchecked")<a name="line.287"></a>
+<span class="sourceLineNo">288</span>                                                        List&lt;AID&gt; aids = (List&lt;AID&gt;) args.valuesOf(CMD_DELETE);<a name="line.288"></a>
+<span class="sourceLineNo">289</span>                                                        for (AID aid: aids) {<a name="line.289"></a>
+<span class="sourceLineNo">290</span>                                                                try {<a name="line.290"></a>
+<span class="sourceLineNo">291</span>                                                                        gp.deleteAID(aid, args.has(OPT_DELETEDEPS));<a name="line.291"></a>
+<span class="sourceLineNo">292</span>                                                                } catch (GPException e) {<a name="line.292"></a>
+<span class="sourceLineNo">293</span>                                                                        if (!gp.getRegistry().allAIDs().contains(aid)) {<a name="line.293"></a>
+<span class="sourceLineNo">294</span>                                                                                System.out.println("Could not delete AID (not present on card): " + aid);<a name="line.294"></a>
+<span class="sourceLineNo">295</span>                                                                        } else {<a name="line.295"></a>
+<span class="sourceLineNo">296</span>                                                                                System.out.println("Could not delete AID: " + aid);<a name="line.296"></a>
+<span class="sourceLineNo">297</span>                                                                                if (e.sw == 0x6985) {<a name="line.297"></a>
+<span class="sourceLineNo">298</span>                                                                                        System.out.println("TIP: Maybe try with --" + OPT_DELETEDEPS);<a name="line.298"></a>
+<span class="sourceLineNo">299</span>                                                                                }<a name="line.299"></a>
+<span class="sourceLineNo">300</span>                                                                                throw e;<a name="line.300"></a>
+<span class="sourceLineNo">301</span>                                                                        }<a name="line.301"></a>
+<span class="sourceLineNo">302</span>                                                                }<a name="line.302"></a>
+<span class="sourceLineNo">303</span>                                                        }<a name="line.303"></a>
+<span class="sourceLineNo">304</span>                                                }<a name="line.304"></a>
+<span class="sourceLineNo">305</span><a name="line.305"></a>
+<span class="sourceLineNo">306</span>                                                // --install &lt;applet.cap&gt;<a name="line.306"></a>
+<span class="sourceLineNo">307</span>                                                if (args.has(CMD_INSTALL)) {<a name="line.307"></a>
+<span class="sourceLineNo">308</span>                                                        AID def = gp.getRegistry().getDefaultSelectedPackageAID();<a name="line.308"></a>
+<span class="sourceLineNo">309</span>                                                        if (def != null &amp;&amp; args.has(OPT_DEFAULT)) {<a name="line.309"></a>
+<span class="sourceLineNo">310</span>                                                                if (args.has(OPT_REINSTALL)) {<a name="line.310"></a>
+<span class="sourceLineNo">311</span>                                                                        gp.verbose("Removing current default applet/package");<a name="line.311"></a>
+<span class="sourceLineNo">312</span>                                                                        // Remove all instances of default selected app package<a name="line.312"></a>
+<span class="sourceLineNo">313</span>                                                                        gp.deleteAID(def, true);<a name="line.313"></a>
+<span class="sourceLineNo">314</span>                                                                }<a name="line.314"></a>
+<span class="sourceLineNo">315</span>                                                        }<a name="line.315"></a>
 <span class="sourceLineNo">316</span><a name="line.316"></a>
-<span class="sourceLineNo">317</span>                                                        // Take the applet AID from CAP but allow to override<a name="line.317"></a>
-<span class="sourceLineNo">318</span>                                                        AID aid = instcap.getAppletAIDs().get(0);<a name="line.318"></a>
-<span class="sourceLineNo">319</span>                                                        if (args.has(OPT_APPLET))<a name="line.319"></a>
-<span class="sourceLineNo">320</span>                                                                aid = (AID) args.valueOf(OPT_APPLET);<a name="line.320"></a>
-<span class="sourceLineNo">321</span><a name="line.321"></a>
-<span class="sourceLineNo">322</span>                                                        if (gp.getRegistry().allAIDs().contains(aid)) {<a name="line.322"></a>
-<span class="sourceLineNo">323</span>                                                                System.err.println("WARNING: Applet " + aid + " already present on card");<a name="line.323"></a>
-<span class="sourceLineNo">324</span>                                                        }<a name="line.324"></a>
-<span class="sourceLineNo">325</span><a name="line.325"></a>
-<span class="sourceLineNo">326</span>                                                        gp.verbose("Installing applet from package " + instcap.getPackageName());<a name="line.326"></a>
-<span class="sourceLineNo">327</span>                                                        gp.loadCapFile(instcap);<a name="line.327"></a>
-<span class="sourceLineNo">328</span>                                                        gp.installAndMakeSelecatable(instcap.getPackageAID(), aid, null, args.has(OPT_DEFAULT) ? (byte) 0x04 : 0x00, null, null);<a name="line.328"></a>
-<span class="sourceLineNo">329</span>                                                }<a name="line.329"></a>
-<span class="sourceLineNo">330</span><a name="line.330"></a>
-<span class="sourceLineNo">331</span>                                                // --create &lt;aid&gt; (--applet &lt;aid&gt; --package &lt;aid&gt; or --cap &lt;cap&gt;)<a name="line.331"></a>
-<span class="sourceLineNo">332</span>                                                if (args.has(CMD_CREATE)) {<a name="line.332"></a>
-<span class="sourceLineNo">333</span>                                                        AID packageAID = null;<a name="line.333"></a>
-<span class="sourceLineNo">334</span>                                                        AID appletAID = null;<a name="line.334"></a>
-<span class="sourceLineNo">335</span>                                                        // Load from cap if present<a name="line.335"></a>
-<span class="sourceLineNo">336</span>                                                        if (cap != null) {<a name="line.336"></a>
-<span class="sourceLineNo">337</span>                                                                packageAID = cap.getPackageAID();<a name="line.337"></a>
-<span class="sourceLineNo">338</span>                                                                appletAID = cap.getAppletAIDs().get(0);<a name="line.338"></a>
-<span class="sourceLineNo">339</span>                                                        }<a name="line.339"></a>
-<span class="sourceLineNo">340</span>                                                        // override if needed<a name="line.340"></a>
-<span class="sourceLineNo">341</span>                                                        packageAID = (AID) args.valueOf(OPT_PACKAGE);<a name="line.341"></a>
-<span class="sourceLineNo">342</span>                                                        appletAID = (AID) args.valueOf(OPT_APPLET);<a name="line.342"></a>
-<span class="sourceLineNo">343</span><a name="line.343"></a>
-<span class="sourceLineNo">344</span>                                                        // check<a name="line.344"></a>
-<span class="sourceLineNo">345</span>                                                        if (packageAID == null || appletAID == null)<a name="line.345"></a>
-<span class="sourceLineNo">346</span>                                                                throw new IllegalArgumentException("Need --" + OPT_PACKAGE + " and --" + OPT_APPLET + " or --" + OPT_CAP);<a name="line.346"></a>
-<span class="sourceLineNo">347</span><a name="line.347"></a>
-<span class="sourceLineNo">348</span>                                                        // shoot<a name="line.348"></a>
-<span class="sourceLineNo">349</span>                                                        AID instanceAID = (AID) args.valueOf(CMD_CREATE);<a name="line.349"></a>
-<span class="sourceLineNo">350</span>                                                        gp.installAndMakeSelecatable(packageAID, appletAID, instanceAID, (byte) 0x00, null, null);<a name="line.350"></a>
-<span class="sourceLineNo">351</span>                                                }<a name="line.351"></a>
-<span class="sourceLineNo">352</span><a name="line.352"></a>
-<span class="sourceLineNo">353</span>                                                // --list<a name="line.353"></a>
-<span class="sourceLineNo">354</span>                                                if (args.has(CMD_LIST)) {<a name="line.354"></a>
-<span class="sourceLineNo">355</span>                                                        for (AIDRegistryEntry e : gp.getRegistry()) {<a name="line.355"></a>
-<span class="sourceLineNo">356</span>                                                                AID aid = e.getAID();<a name="line.356"></a>
-<span class="sourceLineNo">357</span>                                                                System.out.println("AID: " + GPUtils.byteArrayToString(aid.getBytes()) + " (" + GPUtils.byteArrayToReadableString(aid.getBytes()) + ")");<a name="line.357"></a>
-<span class="sourceLineNo">358</span>                                                                System.out.println("     " + e.getKind().toShortString() + " " + e.getLifeCycleString() + ": " + e.getPrivilegesString());<a name="line.358"></a>
-<span class="sourceLineNo">359</span><a name="line.359"></a>
-<span class="sourceLineNo">360</span>                                                                for (AID a : e.getExecutableAIDs()) {<a name="line.360"></a>
-<span class="sourceLineNo">361</span>                                                                        System.out.println("     " + GPUtils.byteArrayToString(a.getBytes()) + " (" + GPUtils.byteArrayToReadableString(a.getBytes()) + ")");<a name="line.361"></a>
-<span class="sourceLineNo">362</span>                                                                }<a name="line.362"></a>
-<span class="sourceLineNo">363</span>                                                                System.out.println();<a name="line.363"></a>
-<span class="sourceLineNo">364</span>                                                        }<a name="line.364"></a>
-<span class="sourceLineNo">365</span>                                                }<a name="line.365"></a>
-<span class="sourceLineNo">366</span><a name="line.366"></a>
-<span class="sourceLineNo">367</span>                                                // --lock<a name="line.367"></a>
-<span class="sourceLineNo">368</span>                                                if (args.has(CMD_LOCK)) {<a name="line.368"></a>
-<span class="sourceLineNo">369</span>                                                        if (args.has(OPT_KEY) || args.has(OPT_MAC) || args.has(OPT_ENC) || args.has(OPT_KEK))<a name="line.369"></a>
-<span class="sourceLineNo">370</span>                                                                gp.printStrictWarning("Using --" + CMD_LOCK + " but specifying other keys");<a name="line.370"></a>
-<span class="sourceLineNo">371</span>                                                        byte[] new_key = ((Key)args.valueOf(CMD_LOCK)).getValue();<a name="line.371"></a>
-<span class="sourceLineNo">372</span>                                                        // Check that<a name="line.372"></a>
-<span class="sourceLineNo">373</span>                                                        List&lt;KeySet.Key&gt; keys = new ArrayList&lt;KeySet.Key&gt;();<a name="line.373"></a>
-<span class="sourceLineNo">374</span>                                                        keys.add(new KeySet.Key(01, 01, new_key));<a name="line.374"></a>
-<span class="sourceLineNo">375</span>                                                        keys.add(new KeySet.Key(01, 02, new_key));<a name="line.375"></a>
-<span class="sourceLineNo">376</span>                                                        keys.add(new KeySet.Key(01, 03, new_key));<a name="line.376"></a>
-<span class="sourceLineNo">377</span>                                                        if (args.has(OPT_EMV) || args.has(OPT_VISA2) || args.has(OPT_VIRGIN)) {<a name="line.377"></a>
-<span class="sourceLineNo">378</span>                                                                gp.putKeys(keys, false);<a name="line.378"></a>
-<span class="sourceLineNo">379</span>                                                        } else {<a name="line.379"></a>
-<span class="sourceLineNo">380</span>                                                                // normally replace<a name="line.380"></a>
-<span class="sourceLineNo">381</span>                                                                gp.putKeys(keys, true);<a name="line.381"></a>
-<span class="sourceLineNo">382</span>                                                        }<a name="line.382"></a>
-<span class="sourceLineNo">383</span>                                                        System.out.println("Card locked with key: " + GPUtils.byteArrayToString(keys.get(0).getValue()));<a name="line.383"></a>
-<span class="sourceLineNo">384</span>                                                        System.out.println("Write this down, DO NOT FORGET/LOSE IT!");<a name="line.384"></a>
-<span class="sourceLineNo">385</span>                                                }<a name="line.385"></a>
-<span class="sourceLineNo">386</span><a name="line.386"></a>
-<span class="sourceLineNo">387</span>                                                // --unlock<a name="line.387"></a>
-<span class="sourceLineNo">388</span>                                                if (args.has(CMD_UNLOCK)) {<a name="line.388"></a>
-<span class="sourceLineNo">389</span>                                                        // Write default keys<a name="line.389"></a>
-<span class="sourceLineNo">390</span>                                                        List&lt;KeySet.Key&gt; keys = new ArrayList&lt;KeySet.Key&gt;();<a name="line.390"></a>
-<span class="sourceLineNo">391</span>                                                        keys.add(new KeySet.Key(01, 01, GlobalPlatformData.defaultKey));<a name="line.391"></a>
-<span class="sourceLineNo">392</span>                                                        keys.add(new KeySet.Key(01, 02, GlobalPlatformData.defaultKey));<a name="line.392"></a>
-<span class="sourceLineNo">393</span>                                                        keys.add(new KeySet.Key(01, 03, GlobalPlatformData.defaultKey));<a name="line.393"></a>
-<span class="sourceLineNo">394</span>                                                        // "add keys" if default factory keys or otherwise virgin card<a name="line.394"></a>
-<span class="sourceLineNo">395</span>                                                        if (args.has(OPT_EMV) || args.has(OPT_VISA2) || args.has(OPT_VIRGIN)) {<a name="line.395"></a>
-<span class="sourceLineNo">396</span>                                                                gp.putKeys(keys, false);<a name="line.396"></a>
-<span class="sourceLineNo">397</span>                                                        } else {<a name="line.397"></a>
-<span class="sourceLineNo">398</span>                                                                // normally replace<a name="line.398"></a>
-<span class="sourceLineNo">399</span>                                                                gp.putKeys(keys, true);<a name="line.399"></a>
-<span class="sourceLineNo">400</span>                                                        }<a name="line.400"></a>
-<span class="sourceLineNo">401</span>                                                }<a name="line.401"></a>
-<span class="sourceLineNo">402</span><a name="line.402"></a>
-<span class="sourceLineNo">403</span>                                                // --make-default &lt;aid&gt;<a name="line.403"></a>
-<span class="sourceLineNo">404</span>                                                if (args.has(CMD_MAKE_DEFAULT)) {<a name="line.404"></a>
-<span class="sourceLineNo">405</span>                                                        gp.makeDefaultSelected((AID) args.valueOf(CMD_MAKE_DEFAULT), (byte) 0x04);<a name="line.405"></a>
-<span class="sourceLineNo">406</span>                                                }<a name="line.406"></a>
-<span class="sourceLineNo">407</span>                                        }<a name="line.407"></a>
-<span class="sourceLineNo">408</span>                                } catch (GPException e) {<a name="line.408"></a>
-<span class="sourceLineNo">409</span>                                        // All unhandled GP exceptions halt the program unless it is run with -relax<a name="line.409"></a>
-<span class="sourceLineNo">410</span>                                        if (!args.has(OPT_RELAX)) {<a name="line.410"></a>
-<span class="sourceLineNo">411</span>                                                e.printStackTrace();<a name="line.411"></a>
-<span class="sourceLineNo">412</span>                                                System.exit(1);<a name="line.412"></a>
-<span class="sourceLineNo">413</span>                                        }<a name="line.413"></a>
-<span class="sourceLineNo">414</span>                                        e.printStackTrace();<a name="line.414"></a>
-<span class="sourceLineNo">415</span>                                } catch (CardException e) {<a name="line.415"></a>
-<span class="sourceLineNo">416</span>                                        // Card exceptions skip to the next reader, if available and allowed<a name="line.416"></a>
-<span class="sourceLineNo">417</span>                                        if (args.has(OPT_CONTINUE)) {<a name="line.417"></a>
-<span class="sourceLineNo">418</span>                                                continue;<a name="line.418"></a>
-<span class="sourceLineNo">419</span>                                        } else {<a name="line.419"></a>
-<span class="sourceLineNo">420</span>                                                e.printStackTrace();<a name="line.420"></a>
-<span class="sourceLineNo">421</span>                                                throw e; // No catch.<a name="line.421"></a>
-<span class="sourceLineNo">422</span>                                        }<a name="line.422"></a>
-<span class="sourceLineNo">423</span>                                } finally {<a name="line.423"></a>
-<span class="sourceLineNo">424</span>                                        if (card != null) {<a name="line.424"></a>
-<span class="sourceLineNo">425</span>                                                card.endExclusive();<a name="line.425"></a>
-<span class="sourceLineNo">426</span>                                                TerminalManager.disconnect(card, true);<a name="line.426"></a>
-<span class="sourceLineNo">427</span>                                        }<a name="line.427"></a>
-<span class="sourceLineNo">428</span>                                }<a name="line.428"></a>
-<span class="sourceLineNo">429</span>                        }<a name="line.429"></a>
-<span class="sourceLineNo">430</span>                } catch (Exception e) {<a name="line.430"></a>
-<span class="sourceLineNo">431</span>                        // Sensible wrapper for the different PC/SC exceptions<a name="line.431"></a>
-<span class="sourceLineNo">432</span>                        if (TerminalManager.getExceptionMessage(e) != null) {<a name="line.432"></a>
-<span class="sourceLineNo">433</span>                                System.out.println("PC/SC failure: " + TerminalManager.getExceptionMessage(e));<a name="line.433"></a>
-<span class="sourceLineNo">434</span>                        } else {<a name="line.434"></a>
-<span class="sourceLineNo">435</span>                                throw e;<a name="line.435"></a>
-<span class="sourceLineNo">436</span>                        }<a name="line.436"></a>
-<span class="sourceLineNo">437</span>                }<a name="line.437"></a>
-<span class="sourceLineNo">438</span>                System.exit(0);<a name="line.438"></a>
-<span class="sourceLineNo">439</span>        }<a name="line.439"></a>
-<span class="sourceLineNo">440</span>}<a name="line.440"></a>
+<span class="sourceLineNo">317</span>                                                        File capfile = (File) args.valueOf(CMD_INSTALL);<a name="line.317"></a>
+<span class="sourceLineNo">318</span>                                                        CapFile instcap = new CapFile(new FileInputStream(capfile));<a name="line.318"></a>
+<span class="sourceLineNo">319</span><a name="line.319"></a>
+<span class="sourceLineNo">320</span>                                                        // Take the applet AID from CAP but allow to override<a name="line.320"></a>
+<span class="sourceLineNo">321</span>                                                        AID aid = instcap.getAppletAIDs().get(0);<a name="line.321"></a>
+<span class="sourceLineNo">322</span>                                                        if (args.has(OPT_APPLET))<a name="line.322"></a>
+<span class="sourceLineNo">323</span>                                                                aid = (AID) args.valueOf(OPT_APPLET);<a name="line.323"></a>
+<span class="sourceLineNo">324</span><a name="line.324"></a>
+<span class="sourceLineNo">325</span>                                                        if (gp.getRegistry().allAIDs().contains(aid)) {<a name="line.325"></a>
+<span class="sourceLineNo">326</span>                                                                System.err.println("WARNING: Applet " + aid + " already present on card");<a name="line.326"></a>
+<span class="sourceLineNo">327</span>                                                        }<a name="line.327"></a>
+<span class="sourceLineNo">328</span><a name="line.328"></a>
+<span class="sourceLineNo">329</span>                                                        gp.verbose("Installing applet from package " + instcap.getPackageName());<a name="line.329"></a>
+<span class="sourceLineNo">330</span>                                                        gp.loadCapFile(instcap);<a name="line.330"></a>
+<span class="sourceLineNo">331</span>                                                        gp.installAndMakeSelecatable(instcap.getPackageAID(), aid, null, args.has(OPT_DEFAULT) ? (byte) 0x04 : 0x00, null, null);<a name="line.331"></a>
+<span class="sourceLineNo">332</span>                                                }<a name="line.332"></a>
+<span class="sourceLineNo">333</span><a name="line.333"></a>
+<span class="sourceLineNo">334</span>                                                // --create &lt;aid&gt; (--applet &lt;aid&gt; --package &lt;aid&gt; or --cap &lt;cap&gt;)<a name="line.334"></a>
+<span class="sourceLineNo">335</span>                                                if (args.has(CMD_CREATE)) {<a name="line.335"></a>
+<span class="sourceLineNo">336</span>                                                        AID packageAID = null;<a name="line.336"></a>
+<span class="sourceLineNo">337</span>                                                        AID appletAID = null;<a name="line.337"></a>
+<span class="sourceLineNo">338</span>                                                        // Load from cap if present<a name="line.338"></a>
+<span class="sourceLineNo">339</span>                                                        if (cap != null) {<a name="line.339"></a>
+<span class="sourceLineNo">340</span>                                                                packageAID = cap.getPackageAID();<a name="line.340"></a>
+<span class="sourceLineNo">341</span>                                                                appletAID = cap.getAppletAIDs().get(0);<a name="line.341"></a>
+<span class="sourceLineNo">342</span>                                                        }<a name="line.342"></a>
+<span class="sourceLineNo">343</span>                                                        // override if needed<a name="line.343"></a>
+<span class="sourceLineNo">344</span>                                                        packageAID = (AID) args.valueOf(OPT_PACKAGE);<a name="line.344"></a>
+<span class="sourceLineNo">345</span>                                                        appletAID = (AID) args.valueOf(OPT_APPLET);<a name="line.345"></a>
+<span class="sourceLineNo">346</span><a name="line.346"></a>
+<span class="sourceLineNo">347</span>                                                        // check<a name="line.347"></a>
+<span class="sourceLineNo">348</span>                                                        if (packageAID == null || appletAID == null)<a name="line.348"></a>
+<span class="sourceLineNo">349</span>                                                                throw new IllegalArgumentException("Need --" + OPT_PACKAGE + " and --" + OPT_APPLET + " or --" + OPT_CAP);<a name="line.349"></a>
+<span class="sourceLineNo">350</span><a name="line.350"></a>
+<span class="sourceLineNo">351</span>                                                        // shoot<a name="line.351"></a>
+<span class="sourceLineNo">352</span>                                                        AID instanceAID = (AID) args.valueOf(CMD_CREATE);<a name="line.352"></a>
+<span class="sourceLineNo">353</span>                                                        gp.installAndMakeSelecatable(packageAID, appletAID, instanceAID, (byte) 0x00, null, null);<a name="line.353"></a>
+<span class="sourceLineNo">354</span>                                                }<a name="line.354"></a>
+<span class="sourceLineNo">355</span><a name="line.355"></a>
+<span class="sourceLineNo">356</span>                                                // --list<a name="line.356"></a>
+<span class="sourceLineNo">357</span>                                                if (args.has(CMD_LIST)) {<a name="line.357"></a>
+<span class="sourceLineNo">358</span>                                                        for (AIDRegistryEntry e : gp.getRegistry()) {<a name="line.358"></a>
+<span class="sourceLineNo">359</span>                                                                AID aid = e.getAID();<a name="line.359"></a>
+<span class="sourceLineNo">360</span>                                                                System.out.println("AID: " + GPUtils.byteArrayToString(aid.getBytes()) + " (" + GPUtils.byteArrayToReadableString(aid.getBytes()) + ")");<a name="line.360"></a>
+<span class="sourceLineNo">361</span>                                                                System.out.println("     " + e.getKind().toShortString() + " " + e.getLifeCycleString() + ": " + e.getPrivilegesString());<a name="line.361"></a>
+<span class="sourceLineNo">362</span><a name="line.362"></a>
+<span class="sourceLineNo">363</span>                                                                for (AID a : e.getExecutableAIDs()) {<a name="line.363"></a>
+<span class="sourceLineNo">364</span>                                                                        System.out.println("     " + GPUtils.byteArrayToString(a.getBytes()) + " (" + GPUtils.byteArrayToReadableString(a.getBytes()) + ")");<a name="line.364"></a>
+<span class="sourceLineNo">365</span>                                                                }<a name="line.365"></a>
+<span class="sourceLineNo">366</span>                                                                System.out.println();<a name="line.366"></a>
+<span class="sourceLineNo">367</span>                                                        }<a name="line.367"></a>
+<span class="sourceLineNo">368</span>                                                }<a name="line.368"></a>
+<span class="sourceLineNo">369</span><a name="line.369"></a>
+<span class="sourceLineNo">370</span>                                                // --lock<a name="line.370"></a>
+<span class="sourceLineNo">371</span>                                                if (args.has(CMD_LOCK)) {<a name="line.371"></a>
+<span class="sourceLineNo">372</span>                                                        if (args.has(OPT_KEY) || args.has(OPT_MAC) || args.has(OPT_ENC) || args.has(OPT_KEK))<a name="line.372"></a>
+<span class="sourceLineNo">373</span>                                                                gp.printStrictWarning("Using --" + CMD_LOCK + " but specifying other keys");<a name="line.373"></a>
+<span class="sourceLineNo">374</span>                                                        byte[] new_key = ((Key)args.valueOf(CMD_LOCK)).getValue();<a name="line.374"></a>
+<span class="sourceLineNo">375</span>                                                        // Check that<a name="line.375"></a>
+<span class="sourceLineNo">376</span>                                                        List&lt;KeySet.Key&gt; keys = new ArrayList&lt;KeySet.Key&gt;();<a name="line.376"></a>
+<span class="sourceLineNo">377</span>                                                        keys.add(new KeySet.Key(01, 01, new_key));<a name="line.377"></a>
+<span class="sourceLineNo">378</span>                                                        keys.add(new KeySet.Key(01, 02, new_key));<a name="line.378"></a>
+<span class="sourceLineNo">379</span>                                                        keys.add(new KeySet.Key(01, 03, new_key));<a name="line.379"></a>
+<span class="sourceLineNo">380</span>                                                        if (args.has(OPT_EMV) || args.has(OPT_VISA2) || args.has(OPT_VIRGIN)) {<a name="line.380"></a>
+<span class="sourceLineNo">381</span>                                                                gp.putKeys(keys, false);<a name="line.381"></a>
+<span class="sourceLineNo">382</span>                                                        } else {<a name="line.382"></a>
+<span class="sourceLineNo">383</span>                                                                // normally replace<a name="line.383"></a>
+<span class="sourceLineNo">384</span>                                                                gp.putKeys(keys, true);<a name="line.384"></a>
+<span class="sourceLineNo">385</span>                                                        }<a name="line.385"></a>
+<span class="sourceLineNo">386</span>                                                        System.out.println("Card locked with key: " + GPUtils.byteArrayToString(keys.get(0).getValue()));<a name="line.386"></a>
+<span class="sourceLineNo">387</span>                                                        System.out.println("Write this down, DO NOT FORGET/LOSE IT!");<a name="line.387"></a>
+<span class="sourceLineNo">388</span>                                                }<a name="line.388"></a>
+<span class="sourceLineNo">389</span><a name="line.389"></a>
+<span class="sourceLineNo">390</span>                                                // --unlock<a name="line.390"></a>
+<span class="sourceLineNo">391</span>                                                if (args.has(CMD_UNLOCK)) {<a name="line.391"></a>
+<span class="sourceLineNo">392</span>                                                        // Write default keys<a name="line.392"></a>
+<span class="sourceLineNo">393</span>                                                        List&lt;KeySet.Key&gt; keys = new ArrayList&lt;KeySet.Key&gt;();<a name="line.393"></a>
+<span class="sourceLineNo">394</span>                                                        keys.add(new KeySet.Key(01, 01, GlobalPlatformData.defaultKey));<a name="line.394"></a>
+<span class="sourceLineNo">395</span>                                                        keys.add(new KeySet.Key(01, 02, GlobalPlatformData.defaultKey));<a name="line.395"></a>
+<span class="sourceLineNo">396</span>                                                        keys.add(new KeySet.Key(01, 03, GlobalPlatformData.defaultKey));<a name="line.396"></a>
+<span class="sourceLineNo">397</span>                                                        // "add keys" if default factory keys or otherwise virgin card<a name="line.397"></a>
+<span class="sourceLineNo">398</span>                                                        if (args.has(OPT_EMV) || args.has(OPT_VISA2) || args.has(OPT_VIRGIN)) {<a name="line.398"></a>
+<span class="sourceLineNo">399</span>                                                                gp.putKeys(keys, false);<a name="line.399"></a>
+<span class="sourceLineNo">400</span>                                                        } else {<a name="line.400"></a>
+<span class="sourceLineNo">401</span>                                                                // normally replace<a name="line.401"></a>
+<span class="sourceLineNo">402</span>                                                                gp.putKeys(keys, true);<a name="line.402"></a>
+<span class="sourceLineNo">403</span>                                                        }<a name="line.403"></a>
+<span class="sourceLineNo">404</span>                                                }<a name="line.404"></a>
+<span class="sourceLineNo">405</span><a name="line.405"></a>
+<span class="sourceLineNo">406</span>                                                // --make-default &lt;aid&gt;<a name="line.406"></a>
+<span class="sourceLineNo">407</span>                                                if (args.has(CMD_MAKE_DEFAULT)) {<a name="line.407"></a>
+<span class="sourceLineNo">408</span>                                                        gp.makeDefaultSelected((AID) args.valueOf(CMD_MAKE_DEFAULT), (byte) 0x04);<a name="line.408"></a>
+<span class="sourceLineNo">409</span>                                                }<a name="line.409"></a>
+<span class="sourceLineNo">410</span>                                        }<a name="line.410"></a>
+<span class="sourceLineNo">411</span>                                } catch (GPException e) {<a name="line.411"></a>
+<span class="sourceLineNo">412</span>                                        // All unhandled GP exceptions halt the program unless it is run with -relax<a name="line.412"></a>
+<span class="sourceLineNo">413</span>                                        if (!args.has(OPT_RELAX)) {<a name="line.413"></a>
+<span class="sourceLineNo">414</span>                                                e.printStackTrace();<a name="line.414"></a>
+<span class="sourceLineNo">415</span>                                                System.exit(1);<a name="line.415"></a>
+<span class="sourceLineNo">416</span>                                        }<a name="line.416"></a>
+<span class="sourceLineNo">417</span>                                        e.printStackTrace();<a name="line.417"></a>
+<span class="sourceLineNo">418</span>                                } catch (CardException e) {<a name="line.418"></a>
+<span class="sourceLineNo">419</span>                                        // Card exceptions skip to the next reader, if available and allowed<a name="line.419"></a>
+<span class="sourceLineNo">420</span>                                        if (args.has(OPT_CONTINUE)) {<a name="line.420"></a>
+<span class="sourceLineNo">421</span>                                                continue;<a name="line.421"></a>
+<span class="sourceLineNo">422</span>                                        } else {<a name="line.422"></a>
+<span class="sourceLineNo">423</span>                                                e.printStackTrace();<a name="line.423"></a>
+<span class="sourceLineNo">424</span>                                                throw e; // No catch.<a name="line.424"></a>
+<span class="sourceLineNo">425</span>                                        }<a name="line.425"></a>
+<span class="sourceLineNo">426</span>                                } finally {<a name="line.426"></a>
+<span class="sourceLineNo">427</span>                                        if (card != null) {<a name="line.427"></a>
+<span class="sourceLineNo">428</span>                                                card.endExclusive();<a name="line.428"></a>
+<span class="sourceLineNo">429</span>                                                TerminalManager.disconnect(card, true);<a name="line.429"></a>
+<span class="sourceLineNo">430</span>                                        }<a name="line.430"></a>
+<span class="sourceLineNo">431</span>                                }<a name="line.431"></a>
+<span class="sourceLineNo">432</span>                        }<a name="line.432"></a>
+<span class="sourceLineNo">433</span>                } catch (Exception e) {<a name="line.433"></a>
+<span class="sourceLineNo">434</span>                        // Sensible wrapper for the different PC/SC exceptions<a name="line.434"></a>
+<span class="sourceLineNo">435</span>                        if (TerminalManager.getExceptionMessage(e) != null) {<a name="line.435"></a>
+<span class="sourceLineNo">436</span>                                System.out.println("PC/SC failure: " + TerminalManager.getExceptionMessage(e));<a name="line.436"></a>
+<span class="sourceLineNo">437</span>                        } else {<a name="line.437"></a>
+<span class="sourceLineNo">438</span>                                throw e;<a name="line.438"></a>
+<span class="sourceLineNo">439</span>                        }<a name="line.439"></a>
+<span class="sourceLineNo">440</span>                }<a name="line.440"></a>
+<span class="sourceLineNo">441</span>                System.exit(0);<a name="line.441"></a>
+<span class="sourceLineNo">442</span>        }<a name="line.442"></a>
+<span class="sourceLineNo">443</span>}<a name="line.443"></a>
 
 
 
