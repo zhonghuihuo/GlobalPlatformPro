@@ -194,20 +194,20 @@
 <span class="sourceLineNo">186</span>                        @Override<a name="line.186"></a>
 <span class="sourceLineNo">187</span>                        public ResponseAPDU transmit(CommandAPDU apdu) throws CardException {<a name="line.187"></a>
 <span class="sourceLineNo">188</span>                                byte [] cb = apdu.getBytes();<a name="line.188"></a>
-<span class="sourceLineNo">189</span>                                int len = apdu.getData().length &gt; 255 ? 7 : 5;<a name="line.189"></a>
+<span class="sourceLineNo">189</span>                                int len_end = apdu.getData().length &gt; 255 ? 7 : 5;<a name="line.189"></a>
 <span class="sourceLineNo">190</span>                                System.out.print("A&gt;&gt; " + card.getProtocol() + " (4+" + String.format("%04d", apdu.getData().length) + ")");<a name="line.190"></a>
 <span class="sourceLineNo">191</span>                                System.out.print(" " + encodeHexString(Arrays.copyOfRange(cb, 0, 4)));<a name="line.191"></a>
 <span class="sourceLineNo">192</span><a name="line.192"></a>
 <span class="sourceLineNo">193</span>                                // Only if Case 2, 3 or 4 APDU<a name="line.193"></a>
 <span class="sourceLineNo">194</span>                                if (apdu.getBytes().length &gt; 4) {<a name="line.194"></a>
-<span class="sourceLineNo">195</span>                                        int cmdlen = cb[ISO7816.OFFSET_LC];<a name="line.195"></a>
+<span class="sourceLineNo">195</span>                                        int cmdlen = cb[ISO7816.OFFSET_LC] &amp; 0xFF;<a name="line.195"></a>
 <span class="sourceLineNo">196</span>                                        if (cmdlen == 0 &amp;&amp; apdu.getData().length &gt; 6) {<a name="line.196"></a>
-<span class="sourceLineNo">197</span>                                                cmdlen  = ((cb[ISO7816.OFFSET_LC +1] &amp; 0xff &lt;&lt; 8) | cb[ISO7816.OFFSET_LC+2] &amp; 0xff);<a name="line.197"></a>
+<span class="sourceLineNo">197</span>                                                cmdlen = ((cb[ISO7816.OFFSET_LC +1] &amp; 0xff &lt;&lt; 8) | cb[ISO7816.OFFSET_LC+2] &amp; 0xff);<a name="line.197"></a>
 <span class="sourceLineNo">198</span>                                        }<a name="line.198"></a>
-<span class="sourceLineNo">199</span>                                        System.out.print(" " + encodeHexString(Arrays.copyOfRange(cb, 4, len)));<a name="line.199"></a>
-<span class="sourceLineNo">200</span>                                        System.out.print(" " + encodeHexString(Arrays.copyOfRange(cb, len, len + cmdlen)));<a name="line.200"></a>
-<span class="sourceLineNo">201</span>                                        if (len + cmdlen &lt; cb.length) {<a name="line.201"></a>
-<span class="sourceLineNo">202</span>                                                System.out.println(" " + encodeHexString(Arrays.copyOfRange(cb, len + cmdlen, cb.length)));<a name="line.202"></a>
+<span class="sourceLineNo">199</span>                                        System.out.print(" " + encodeHexString(Arrays.copyOfRange(cb, 4, len_end)));<a name="line.199"></a>
+<span class="sourceLineNo">200</span>                                        System.out.print(" " + encodeHexString(Arrays.copyOfRange(cb, len_end, len_end + cmdlen)));<a name="line.200"></a>
+<span class="sourceLineNo">201</span>                                        if (len_end + cmdlen &lt; cb.length) {<a name="line.201"></a>
+<span class="sourceLineNo">202</span>                                                System.out.println(" " + encodeHexString(Arrays.copyOfRange(cb, len_end + cmdlen, cb.length)));<a name="line.202"></a>
 <span class="sourceLineNo">203</span>                                        } else {<a name="line.203"></a>
 <span class="sourceLineNo">204</span>                                                System.out.println();<a name="line.204"></a>
 <span class="sourceLineNo">205</span>                                        }<a name="line.205"></a>

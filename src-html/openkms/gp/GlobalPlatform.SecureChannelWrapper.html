@@ -57,383 +57,383 @@
 <span class="sourceLineNo">049</span>import openkms.gp.KeySet.KeyDiversification;<a name="line.49"></a>
 <span class="sourceLineNo">050</span>import openkms.gp.KeySet.KeyType;<a name="line.50"></a>
 <span class="sourceLineNo">051</span><a name="line.51"></a>
-<span class="sourceLineNo">052</span><a name="line.52"></a>
-<span class="sourceLineNo">053</span>/**<a name="line.53"></a>
-<span class="sourceLineNo">054</span> * The main Global Platform class. Provides most of the Global Platform<a name="line.54"></a>
-<span class="sourceLineNo">055</span> * functionality for managing GP compliant smart cards.<a name="line.55"></a>
-<span class="sourceLineNo">056</span> */<a name="line.56"></a>
-<span class="sourceLineNo">057</span>public class GlobalPlatform {<a name="line.57"></a>
-<span class="sourceLineNo">058</span>        public static final String sdk_version = "v0.2";<a name="line.58"></a>
-<span class="sourceLineNo">059</span>        public static final short SHORT_0 = 0;<a name="line.59"></a>
-<span class="sourceLineNo">060</span>        public static final int SCP_ANY = 0;<a name="line.60"></a>
-<span class="sourceLineNo">061</span>        public static final int SCP_01_05 = 1;<a name="line.61"></a>
-<span class="sourceLineNo">062</span>        public static final int SCP_01_15 = 2;<a name="line.62"></a>
-<span class="sourceLineNo">063</span>        public static final int SCP_02_04 = 3;<a name="line.63"></a>
-<span class="sourceLineNo">064</span>        public static final int SCP_02_05 = 4;<a name="line.64"></a>
-<span class="sourceLineNo">065</span>        public static final int SCP_02_0A = 5;<a name="line.65"></a>
-<span class="sourceLineNo">066</span>        public static final int SCP_02_0B = 6;<a name="line.66"></a>
-<span class="sourceLineNo">067</span>        public static final int SCP_02_14 = 7;<a name="line.67"></a>
-<span class="sourceLineNo">068</span>        public static final int SCP_02_15 = 8;<a name="line.68"></a>
-<span class="sourceLineNo">069</span>        public static final int SCP_02_1A = 9;<a name="line.69"></a>
-<span class="sourceLineNo">070</span>        public static final int SCP_02_1B = 10;<a name="line.70"></a>
-<span class="sourceLineNo">071</span>        public enum APDUMode {<a name="line.71"></a>
-<span class="sourceLineNo">072</span>                // bit values as expected by EXTERNAL AUTHENTICATE<a name="line.72"></a>
-<span class="sourceLineNo">073</span>                CLR(0x00), MAC(0x01), ENC(0x02), RMAC(0x10);<a name="line.73"></a>
-<span class="sourceLineNo">074</span><a name="line.74"></a>
-<span class="sourceLineNo">075</span>                private final int value;<a name="line.75"></a>
-<span class="sourceLineNo">076</span>                private APDUMode(int value) {this.value = value;}<a name="line.76"></a>
-<span class="sourceLineNo">077</span><a name="line.77"></a>
-<span class="sourceLineNo">078</span>                public static int getSetValue(EnumSet&lt;APDUMode&gt; s) {<a name="line.78"></a>
-<span class="sourceLineNo">079</span>                        int v = 0;<a name="line.79"></a>
-<span class="sourceLineNo">080</span>                        for (APDUMode m : s) {<a name="line.80"></a>
-<span class="sourceLineNo">081</span>                                v |= m.value;<a name="line.81"></a>
-<span class="sourceLineNo">082</span>                        }<a name="line.82"></a>
-<span class="sourceLineNo">083</span>                        return v;<a name="line.83"></a>
-<span class="sourceLineNo">084</span>                }<a name="line.84"></a>
-<span class="sourceLineNo">085</span>        };<a name="line.85"></a>
-<span class="sourceLineNo">086</span>        public EnumSet&lt;APDUMode&gt; defaultMode = EnumSet.of(APDUMode.MAC);<a name="line.86"></a>
-<span class="sourceLineNo">087</span><a name="line.87"></a>
-<span class="sourceLineNo">088</span>        // Implementation details<a name="line.88"></a>
-<span class="sourceLineNo">089</span>        private static final byte CLA_GP = (byte) 0x80;<a name="line.89"></a>
-<span class="sourceLineNo">090</span>        private static final byte CLA_MAC = (byte) 0x84;<a name="line.90"></a>
-<span class="sourceLineNo">091</span>        private static final byte INS_INITIALIZE_UPDATE = (byte) 0x50;<a name="line.91"></a>
-<span class="sourceLineNo">092</span>        private static final byte INS_INSTALL = (byte) 0xE6;<a name="line.92"></a>
-<span class="sourceLineNo">093</span>        private static final byte INS_LOAD = (byte) 0xE8;<a name="line.93"></a>
-<span class="sourceLineNo">094</span>        private static final byte INS_DELETE = (byte) 0xE4;<a name="line.94"></a>
-<span class="sourceLineNo">095</span>        private static final byte INS_GET_STATUS = (byte) 0xF2;<a name="line.95"></a>
-<span class="sourceLineNo">096</span>        private static final byte INS_PUT_KEY = (byte) 0xD8;<a name="line.96"></a>
+<span class="sourceLineNo">052</span>/**<a name="line.52"></a>
+<span class="sourceLineNo">053</span> * The main Global Platform class. Provides most of the Global Platform<a name="line.53"></a>
+<span class="sourceLineNo">054</span> * functionality for managing GP compliant smart cards.<a name="line.54"></a>
+<span class="sourceLineNo">055</span> */<a name="line.55"></a>
+<span class="sourceLineNo">056</span>public class GlobalPlatform {<a name="line.56"></a>
+<span class="sourceLineNo">057</span>        public static final String sdk_version = "v0.2";<a name="line.57"></a>
+<span class="sourceLineNo">058</span>        public static final short SHORT_0 = 0;<a name="line.58"></a>
+<span class="sourceLineNo">059</span>        public static final int SCP_ANY = 0;<a name="line.59"></a>
+<span class="sourceLineNo">060</span>        public static final int SCP_01_05 = 1;<a name="line.60"></a>
+<span class="sourceLineNo">061</span>        public static final int SCP_01_15 = 2;<a name="line.61"></a>
+<span class="sourceLineNo">062</span>        public static final int SCP_02_04 = 3;<a name="line.62"></a>
+<span class="sourceLineNo">063</span>        public static final int SCP_02_05 = 4;<a name="line.63"></a>
+<span class="sourceLineNo">064</span>        public static final int SCP_02_0A = 5;<a name="line.64"></a>
+<span class="sourceLineNo">065</span>        public static final int SCP_02_0B = 6;<a name="line.65"></a>
+<span class="sourceLineNo">066</span>        public static final int SCP_02_14 = 7;<a name="line.66"></a>
+<span class="sourceLineNo">067</span>        public static final int SCP_02_15 = 8;<a name="line.67"></a>
+<span class="sourceLineNo">068</span>        public static final int SCP_02_1A = 9;<a name="line.68"></a>
+<span class="sourceLineNo">069</span>        public static final int SCP_02_1B = 10;<a name="line.69"></a>
+<span class="sourceLineNo">070</span>        public enum APDUMode {<a name="line.70"></a>
+<span class="sourceLineNo">071</span>                // bit values as expected by EXTERNAL AUTHENTICATE<a name="line.71"></a>
+<span class="sourceLineNo">072</span>                CLR(0x00), MAC(0x01), ENC(0x02), RMAC(0x10);<a name="line.72"></a>
+<span class="sourceLineNo">073</span><a name="line.73"></a>
+<span class="sourceLineNo">074</span>                private final int value;<a name="line.74"></a>
+<span class="sourceLineNo">075</span>                private APDUMode(int value) {this.value = value;}<a name="line.75"></a>
+<span class="sourceLineNo">076</span><a name="line.76"></a>
+<span class="sourceLineNo">077</span>                public static int getSetValue(EnumSet&lt;APDUMode&gt; s) {<a name="line.77"></a>
+<span class="sourceLineNo">078</span>                        int v = 0;<a name="line.78"></a>
+<span class="sourceLineNo">079</span>                        for (APDUMode m : s) {<a name="line.79"></a>
+<span class="sourceLineNo">080</span>                                v |= m.value;<a name="line.80"></a>
+<span class="sourceLineNo">081</span>                        }<a name="line.81"></a>
+<span class="sourceLineNo">082</span>                        return v;<a name="line.82"></a>
+<span class="sourceLineNo">083</span>                }<a name="line.83"></a>
+<span class="sourceLineNo">084</span>        };<a name="line.84"></a>
+<span class="sourceLineNo">085</span>        public EnumSet&lt;APDUMode&gt; defaultMode = EnumSet.of(APDUMode.MAC);<a name="line.85"></a>
+<span class="sourceLineNo">086</span><a name="line.86"></a>
+<span class="sourceLineNo">087</span>        // Implementation details<a name="line.87"></a>
+<span class="sourceLineNo">088</span>        private static final byte CLA_GP = (byte) 0x80;<a name="line.88"></a>
+<span class="sourceLineNo">089</span>        private static final byte CLA_MAC = (byte) 0x84;<a name="line.89"></a>
+<span class="sourceLineNo">090</span>        private static final byte INS_INITIALIZE_UPDATE = (byte) 0x50;<a name="line.90"></a>
+<span class="sourceLineNo">091</span>        private static final byte INS_INSTALL = (byte) 0xE6;<a name="line.91"></a>
+<span class="sourceLineNo">092</span>        private static final byte INS_LOAD = (byte) 0xE8;<a name="line.92"></a>
+<span class="sourceLineNo">093</span>        private static final byte INS_DELETE = (byte) 0xE4;<a name="line.93"></a>
+<span class="sourceLineNo">094</span>        private static final byte INS_GET_STATUS = (byte) 0xF2;<a name="line.94"></a>
+<span class="sourceLineNo">095</span>        private static final byte INS_PUT_KEY = (byte) 0xD8;<a name="line.95"></a>
+<span class="sourceLineNo">096</span><a name="line.96"></a>
 <span class="sourceLineNo">097</span><a name="line.97"></a>
-<span class="sourceLineNo">098</span><a name="line.98"></a>
-<span class="sourceLineNo">099</span>        // AID of the card successfully selected or null<a name="line.99"></a>
-<span class="sourceLineNo">100</span>        public AID sdAID = null;<a name="line.100"></a>
-<span class="sourceLineNo">101</span><a name="line.101"></a>
-<span class="sourceLineNo">102</span>        // Either 1 or 2<a name="line.102"></a>
-<span class="sourceLineNo">103</span>        private int scpMajorVersion = 0;<a name="line.103"></a>
-<span class="sourceLineNo">104</span><a name="line.104"></a>
-<span class="sourceLineNo">105</span>        private static final byte[] iv_null_bytes = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };<a name="line.105"></a>
-<span class="sourceLineNo">106</span>        private static final IvParameterSpec iv_null = new IvParameterSpec(iv_null_bytes);<a name="line.106"></a>
-<span class="sourceLineNo">107</span><a name="line.107"></a>
-<span class="sourceLineNo">108</span>        public static final int defaultLoadSize = 255; // TODO: Check CardData<a name="line.108"></a>
-<span class="sourceLineNo">109</span>        private SecureChannelWrapper wrapper = null;<a name="line.109"></a>
-<span class="sourceLineNo">110</span>        private KeySet staticKeys = null;<a name="line.110"></a>
-<span class="sourceLineNo">111</span>        private CardChannel channel = null;<a name="line.111"></a>
-<span class="sourceLineNo">112</span><a name="line.112"></a>
-<span class="sourceLineNo">113</span>        private byte[] cplc = null;<a name="line.113"></a>
-<span class="sourceLineNo">114</span>        private AIDRegistry registry = null;<a name="line.114"></a>
-<span class="sourceLineNo">115</span>        private boolean dirty = true; // True if registry is dirty.<a name="line.115"></a>
-<span class="sourceLineNo">116</span>        private PrintStream verboseTo = null;<a name="line.116"></a>
-<span class="sourceLineNo">117</span>        protected boolean strict = true;<a name="line.117"></a>
+<span class="sourceLineNo">098</span>        // AID of the card successfully selected or null<a name="line.98"></a>
+<span class="sourceLineNo">099</span>        public AID sdAID = null;<a name="line.99"></a>
+<span class="sourceLineNo">100</span><a name="line.100"></a>
+<span class="sourceLineNo">101</span>        // Either 1 or 2 or 3<a name="line.101"></a>
+<span class="sourceLineNo">102</span>        private int scpMajorVersion = 0;<a name="line.102"></a>
+<span class="sourceLineNo">103</span><a name="line.103"></a>
+<span class="sourceLineNo">104</span>        private static final byte[] iv_null_bytes = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };<a name="line.104"></a>
+<span class="sourceLineNo">105</span>        private static final IvParameterSpec iv_null = new IvParameterSpec(iv_null_bytes);<a name="line.105"></a>
+<span class="sourceLineNo">106</span><a name="line.106"></a>
+<span class="sourceLineNo">107</span>        public static final int defaultLoadSize = 255; // TODO: Check CardData<a name="line.107"></a>
+<span class="sourceLineNo">108</span>        private SecureChannelWrapper wrapper = null;<a name="line.108"></a>
+<span class="sourceLineNo">109</span>        private KeySet staticKeys = null;<a name="line.109"></a>
+<span class="sourceLineNo">110</span>        private CardChannel channel = null;<a name="line.110"></a>
+<span class="sourceLineNo">111</span><a name="line.111"></a>
+<span class="sourceLineNo">112</span>        private byte[] cplc = null;<a name="line.112"></a>
+<span class="sourceLineNo">113</span>        private AIDRegistry registry = null;<a name="line.113"></a>
+<span class="sourceLineNo">114</span>        private boolean dirty = true; // True if registry is dirty.<a name="line.114"></a>
+<span class="sourceLineNo">115</span>        private PrintStream verboseTo = null;<a name="line.115"></a>
+<span class="sourceLineNo">116</span>        protected boolean strict = true;<a name="line.116"></a>
+<span class="sourceLineNo">117</span><a name="line.117"></a>
 <span class="sourceLineNo">118</span><a name="line.118"></a>
-<span class="sourceLineNo">119</span><a name="line.119"></a>
-<span class="sourceLineNo">120</span>        /**<a name="line.120"></a>
-<span class="sourceLineNo">121</span>         * Set the channel and use the default security domain AID and scpAny.<a name="line.121"></a>
-<span class="sourceLineNo">122</span>         *<a name="line.122"></a>
-<span class="sourceLineNo">123</span>         * @param channel<a name="line.123"></a>
-<span class="sourceLineNo">124</span>         *            channel to talk to<a name="line.124"></a>
-<span class="sourceLineNo">125</span>         * @throws IllegalArgumentException<a name="line.125"></a>
-<span class="sourceLineNo">126</span>         *             if {@code channel} is null.<a name="line.126"></a>
-<span class="sourceLineNo">127</span>         */<a name="line.127"></a>
-<span class="sourceLineNo">128</span>        public GlobalPlatform(CardChannel channel) {<a name="line.128"></a>
-<span class="sourceLineNo">129</span>                this.channel = channel;<a name="line.129"></a>
-<span class="sourceLineNo">130</span>        }<a name="line.130"></a>
-<span class="sourceLineNo">131</span><a name="line.131"></a>
-<span class="sourceLineNo">132</span>        protected boolean beVerbose() {<a name="line.132"></a>
-<span class="sourceLineNo">133</span>                return verboseTo != null;<a name="line.133"></a>
-<span class="sourceLineNo">134</span>        }<a name="line.134"></a>
-<span class="sourceLineNo">135</span>        public void beVerboseTo(PrintStream out) {<a name="line.135"></a>
-<span class="sourceLineNo">136</span>                this.verboseTo = out;<a name="line.136"></a>
-<span class="sourceLineNo">137</span>        }<a name="line.137"></a>
-<span class="sourceLineNo">138</span>        protected void verbose(String s) {<a name="line.138"></a>
-<span class="sourceLineNo">139</span>                if (!beVerbose())<a name="line.139"></a>
-<span class="sourceLineNo">140</span>                        return;<a name="line.140"></a>
-<span class="sourceLineNo">141</span>                verboseTo.flush();<a name="line.141"></a>
-<span class="sourceLineNo">142</span>                verboseTo.println(s);<a name="line.142"></a>
-<span class="sourceLineNo">143</span>                verboseTo.flush();<a name="line.143"></a>
-<span class="sourceLineNo">144</span>        }<a name="line.144"></a>
-<span class="sourceLineNo">145</span><a name="line.145"></a>
-<span class="sourceLineNo">146</span>        public void setStrict(boolean strict) {<a name="line.146"></a>
-<span class="sourceLineNo">147</span>                this.strict = strict;<a name="line.147"></a>
-<span class="sourceLineNo">148</span>        }<a name="line.148"></a>
-<span class="sourceLineNo">149</span><a name="line.149"></a>
-<span class="sourceLineNo">150</span>        public void imFeelingLucky() throws CardException, GPException {<a name="line.150"></a>
-<span class="sourceLineNo">151</span>                select(null);<a name="line.151"></a>
-<span class="sourceLineNo">152</span>                KeySet ks = new KeySet(GlobalPlatformData.defaultKey, GlobalPlatformData.suggestDiversification(getCPLC()));<a name="line.152"></a>
-<span class="sourceLineNo">153</span>                openSecureChannel(ks, SCP_ANY, EnumSet.of(APDUMode.MAC));<a name="line.153"></a>
-<span class="sourceLineNo">154</span>        }<a name="line.154"></a>
-<span class="sourceLineNo">155</span><a name="line.155"></a>
-<span class="sourceLineNo">156</span>        protected void printStrictWarning(String message) throws GPException {<a name="line.156"></a>
-<span class="sourceLineNo">157</span>                message = "STRICT WARNING: "+ message;<a name="line.157"></a>
-<span class="sourceLineNo">158</span>                if (strict) {<a name="line.158"></a>
-<span class="sourceLineNo">159</span>                        throw new GPException(message);<a name="line.159"></a>
-<span class="sourceLineNo">160</span>                } else {<a name="line.160"></a>
-<span class="sourceLineNo">161</span>                        System.err.println(message);<a name="line.161"></a>
-<span class="sourceLineNo">162</span>                }<a name="line.162"></a>
-<span class="sourceLineNo">163</span>        }<a name="line.163"></a>
-<span class="sourceLineNo">164</span><a name="line.164"></a>
-<span class="sourceLineNo">165</span>        private int getGPCLA() {<a name="line.165"></a>
-<span class="sourceLineNo">166</span>                if (wrapper != null &amp;&amp; wrapper.doesMAC())<a name="line.166"></a>
-<span class="sourceLineNo">167</span>                        return CLA_MAC;<a name="line.167"></a>
-<span class="sourceLineNo">168</span>                return CLA_GP;<a name="line.168"></a>
-<span class="sourceLineNo">169</span>        }<a name="line.169"></a>
-<span class="sourceLineNo">170</span>        public boolean select(AID sdAID) throws GPException, CardException {<a name="line.170"></a>
-<span class="sourceLineNo">171</span>                // Try to select ISD without giving the sdAID<a name="line.171"></a>
-<span class="sourceLineNo">172</span>                CommandAPDU command = null;<a name="line.172"></a>
-<span class="sourceLineNo">173</span>                if (sdAID == null )<a name="line.173"></a>
-<span class="sourceLineNo">174</span>                        command = new CommandAPDU(ISO7816.CLA_ISO7816, ISO7816.INS_SELECT, 0x04, 0x00, 256);<a name="line.174"></a>
-<span class="sourceLineNo">175</span>                else<a name="line.175"></a>
-<span class="sourceLineNo">176</span>                        command = new CommandAPDU(ISO7816.CLA_ISO7816, ISO7816.INS_SELECT, 0x04, 0x00, sdAID.getBytes(), 256);<a name="line.176"></a>
-<span class="sourceLineNo">177</span><a name="line.177"></a>
-<span class="sourceLineNo">178</span>                ResponseAPDU resp = channel.transmit(command);<a name="line.178"></a>
-<span class="sourceLineNo">179</span><a name="line.179"></a>
-<span class="sourceLineNo">180</span>                if (resp.getSW() == 0x6283) {<a name="line.180"></a>
-<span class="sourceLineNo">181</span>                        printStrictWarning("SELECT ISD returned 6283 - CARD_LOCKED");<a name="line.181"></a>
-<span class="sourceLineNo">182</span>                }<a name="line.182"></a>
-<span class="sourceLineNo">183</span>                if (resp.getSW() == 0x9000 || resp.getSW() == 0x6283) {<a name="line.183"></a>
-<span class="sourceLineNo">184</span>                        // The security domain AID is in FCI.<a name="line.184"></a>
-<span class="sourceLineNo">185</span>                        byte[] fci = resp.getData();<a name="line.185"></a>
-<span class="sourceLineNo">186</span><a name="line.186"></a>
-<span class="sourceLineNo">187</span>                        // Skip template information and find tag 0x84<a name="line.187"></a>
-<span class="sourceLineNo">188</span>                        short aid_offset = TLVUtils.findTag(fci, TLVUtils.skipTagAndLength(fci, (short) 0, (byte) 0x6F), (byte) 0x84);<a name="line.188"></a>
-<span class="sourceLineNo">189</span>                        int aid_length = TLVUtils.getTagLength(fci, aid_offset);<a name="line.189"></a>
-<span class="sourceLineNo">190</span><a name="line.190"></a>
-<span class="sourceLineNo">191</span>                        AID detectedAID = new AID(fci, aid_offset + 2, aid_length);<a name="line.191"></a>
-<span class="sourceLineNo">192</span>                        verbose("Auto-detected ISD AID: " + detectedAID);<a name="line.192"></a>
-<span class="sourceLineNo">193</span>                        if (sdAID != null &amp;&amp; !detectedAID.equals(sdAID)) {<a name="line.193"></a>
-<span class="sourceLineNo">194</span>                                printStrictWarning("SD AID in FCI does not match the requested AID!");<a name="line.194"></a>
-<span class="sourceLineNo">195</span>                        }<a name="line.195"></a>
-<span class="sourceLineNo">196</span>                        this.sdAID = sdAID == null ? detectedAID : sdAID;<a name="line.196"></a>
-<span class="sourceLineNo">197</span>                        return true;<a name="line.197"></a>
-<span class="sourceLineNo">198</span>                        // TODO: parse the maximum command size as well and use with defaultLoadSize<a name="line.198"></a>
-<span class="sourceLineNo">199</span>                }<a name="line.199"></a>
-<span class="sourceLineNo">200</span>                return false;<a name="line.200"></a>
-<span class="sourceLineNo">201</span>        }<a name="line.201"></a>
-<span class="sourceLineNo">202</span><a name="line.202"></a>
-<span class="sourceLineNo">203</span>        /**<a name="line.203"></a>
-<span class="sourceLineNo">204</span>         * Establish a connection to the security domain specified in the<a name="line.204"></a>
-<span class="sourceLineNo">205</span>         * constructor or discovered. This method is required before doing<a name="line.205"></a>
-<span class="sourceLineNo">206</span>         * {@link #openSecureChannel openSecureChannel}.<a name="line.206"></a>
-<span class="sourceLineNo">207</span>         *<a name="line.207"></a>
-<span class="sourceLineNo">208</span>         * @throws GPException<a name="line.208"></a>
-<span class="sourceLineNo">209</span>         *             if security domain selection fails for some reason<a name="line.209"></a>
-<span class="sourceLineNo">210</span>         * @throws CardException<a name="line.210"></a>
-<span class="sourceLineNo">211</span>         *             on data transmission errors<a name="line.211"></a>
-<span class="sourceLineNo">212</span>         */<a name="line.212"></a>
-<span class="sourceLineNo">213</span>        public void select() throws GPException, CardException, IOException {<a name="line.213"></a>
-<span class="sourceLineNo">214</span>                if (!select(null)) {<a name="line.214"></a>
-<span class="sourceLineNo">215</span>                        throw new GPException("Could not select security domain!");<a name="line.215"></a>
-<span class="sourceLineNo">216</span>                }<a name="line.216"></a>
-<span class="sourceLineNo">217</span>        }<a name="line.217"></a>
+<span class="sourceLineNo">119</span>        /**<a name="line.119"></a>
+<span class="sourceLineNo">120</span>         * Set the channel and use the default security domain AID and scpAny.<a name="line.120"></a>
+<span class="sourceLineNo">121</span>         *<a name="line.121"></a>
+<span class="sourceLineNo">122</span>         * @param channel<a name="line.122"></a>
+<span class="sourceLineNo">123</span>         *            channel to talk to<a name="line.123"></a>
+<span class="sourceLineNo">124</span>         * @throws IllegalArgumentException<a name="line.124"></a>
+<span class="sourceLineNo">125</span>         *             if {@code channel} is null.<a name="line.125"></a>
+<span class="sourceLineNo">126</span>         */<a name="line.126"></a>
+<span class="sourceLineNo">127</span>        public GlobalPlatform(CardChannel channel) {<a name="line.127"></a>
+<span class="sourceLineNo">128</span>                this.channel = channel;<a name="line.128"></a>
+<span class="sourceLineNo">129</span>        }<a name="line.129"></a>
+<span class="sourceLineNo">130</span><a name="line.130"></a>
+<span class="sourceLineNo">131</span>        protected boolean beVerbose() {<a name="line.131"></a>
+<span class="sourceLineNo">132</span>                return verboseTo != null;<a name="line.132"></a>
+<span class="sourceLineNo">133</span>        }<a name="line.133"></a>
+<span class="sourceLineNo">134</span>        public void beVerboseTo(PrintStream out) {<a name="line.134"></a>
+<span class="sourceLineNo">135</span>                this.verboseTo = out;<a name="line.135"></a>
+<span class="sourceLineNo">136</span>        }<a name="line.136"></a>
+<span class="sourceLineNo">137</span>        protected void verbose(String s) {<a name="line.137"></a>
+<span class="sourceLineNo">138</span>                if (!beVerbose())<a name="line.138"></a>
+<span class="sourceLineNo">139</span>                        return;<a name="line.139"></a>
+<span class="sourceLineNo">140</span>                verboseTo.flush();<a name="line.140"></a>
+<span class="sourceLineNo">141</span>                verboseTo.println(s);<a name="line.141"></a>
+<span class="sourceLineNo">142</span>                verboseTo.flush();<a name="line.142"></a>
+<span class="sourceLineNo">143</span>        }<a name="line.143"></a>
+<span class="sourceLineNo">144</span><a name="line.144"></a>
+<span class="sourceLineNo">145</span>        public void setStrict(boolean strict) {<a name="line.145"></a>
+<span class="sourceLineNo">146</span>                this.strict = strict;<a name="line.146"></a>
+<span class="sourceLineNo">147</span>        }<a name="line.147"></a>
+<span class="sourceLineNo">148</span><a name="line.148"></a>
+<span class="sourceLineNo">149</span>        public void imFeelingLucky() throws CardException, GPException {<a name="line.149"></a>
+<span class="sourceLineNo">150</span>                select(null);<a name="line.150"></a>
+<span class="sourceLineNo">151</span>                KeySet ks = new KeySet(GlobalPlatformData.defaultKey, GlobalPlatformData.suggestDiversification(getCPLC()));<a name="line.151"></a>
+<span class="sourceLineNo">152</span>                openSecureChannel(ks, SCP_ANY, EnumSet.of(APDUMode.MAC));<a name="line.152"></a>
+<span class="sourceLineNo">153</span>        }<a name="line.153"></a>
+<span class="sourceLineNo">154</span><a name="line.154"></a>
+<span class="sourceLineNo">155</span>        protected void printStrictWarning(String message) throws GPException {<a name="line.155"></a>
+<span class="sourceLineNo">156</span>                message = "STRICT WARNING: "+ message;<a name="line.156"></a>
+<span class="sourceLineNo">157</span>                if (strict) {<a name="line.157"></a>
+<span class="sourceLineNo">158</span>                        throw new GPException(message);<a name="line.158"></a>
+<span class="sourceLineNo">159</span>                } else {<a name="line.159"></a>
+<span class="sourceLineNo">160</span>                        System.err.println(message);<a name="line.160"></a>
+<span class="sourceLineNo">161</span>                }<a name="line.161"></a>
+<span class="sourceLineNo">162</span>        }<a name="line.162"></a>
+<span class="sourceLineNo">163</span><a name="line.163"></a>
+<span class="sourceLineNo">164</span>        private int getGPCLA() {<a name="line.164"></a>
+<span class="sourceLineNo">165</span>                if (wrapper != null &amp;&amp; wrapper.doesMAC())<a name="line.165"></a>
+<span class="sourceLineNo">166</span>                        return CLA_MAC;<a name="line.166"></a>
+<span class="sourceLineNo">167</span>                return CLA_GP;<a name="line.167"></a>
+<span class="sourceLineNo">168</span>        }<a name="line.168"></a>
+<span class="sourceLineNo">169</span>        public boolean select(AID sdAID) throws GPException, CardException {<a name="line.169"></a>
+<span class="sourceLineNo">170</span>                // Try to select ISD without giving the sdAID<a name="line.170"></a>
+<span class="sourceLineNo">171</span>                CommandAPDU command = null;<a name="line.171"></a>
+<span class="sourceLineNo">172</span>                if (sdAID == null )<a name="line.172"></a>
+<span class="sourceLineNo">173</span>                        command = new CommandAPDU(ISO7816.CLA_ISO7816, ISO7816.INS_SELECT, 0x04, 0x00, 256);<a name="line.173"></a>
+<span class="sourceLineNo">174</span>                else<a name="line.174"></a>
+<span class="sourceLineNo">175</span>                        command = new CommandAPDU(ISO7816.CLA_ISO7816, ISO7816.INS_SELECT, 0x04, 0x00, sdAID.getBytes(), 256);<a name="line.175"></a>
+<span class="sourceLineNo">176</span><a name="line.176"></a>
+<span class="sourceLineNo">177</span>                ResponseAPDU resp = channel.transmit(command);<a name="line.177"></a>
+<span class="sourceLineNo">178</span><a name="line.178"></a>
+<span class="sourceLineNo">179</span>                if (resp.getSW() == 0x6283) {<a name="line.179"></a>
+<span class="sourceLineNo">180</span>                        printStrictWarning("SELECT ISD returned 6283 - CARD_LOCKED");<a name="line.180"></a>
+<span class="sourceLineNo">181</span>                }<a name="line.181"></a>
+<span class="sourceLineNo">182</span>                if (resp.getSW() == 0x9000 || resp.getSW() == 0x6283) {<a name="line.182"></a>
+<span class="sourceLineNo">183</span>                        // The security domain AID is in FCI.<a name="line.183"></a>
+<span class="sourceLineNo">184</span>                        byte[] fci = resp.getData();<a name="line.184"></a>
+<span class="sourceLineNo">185</span><a name="line.185"></a>
+<span class="sourceLineNo">186</span>                        // Skip template information and find tag 0x84<a name="line.186"></a>
+<span class="sourceLineNo">187</span>                        short aid_offset = TLVUtils.findTag(fci, TLVUtils.skipTagAndLength(fci, (short) 0, (byte) 0x6F), (byte) 0x84);<a name="line.187"></a>
+<span class="sourceLineNo">188</span>                        int aid_length = TLVUtils.getTagLength(fci, aid_offset);<a name="line.188"></a>
+<span class="sourceLineNo">189</span><a name="line.189"></a>
+<span class="sourceLineNo">190</span>                        AID detectedAID = new AID(fci, aid_offset + 2, aid_length);<a name="line.190"></a>
+<span class="sourceLineNo">191</span>                        verbose("Auto-detected ISD AID: " + detectedAID);<a name="line.191"></a>
+<span class="sourceLineNo">192</span>                        if (sdAID != null &amp;&amp; !detectedAID.equals(sdAID)) {<a name="line.192"></a>
+<span class="sourceLineNo">193</span>                                printStrictWarning("SD AID in FCI does not match the requested AID!");<a name="line.193"></a>
+<span class="sourceLineNo">194</span>                        }<a name="line.194"></a>
+<span class="sourceLineNo">195</span>                        this.sdAID = sdAID == null ? detectedAID : sdAID;<a name="line.195"></a>
+<span class="sourceLineNo">196</span>                        return true;<a name="line.196"></a>
+<span class="sourceLineNo">197</span>                        // TODO: parse the maximum command size as well and use with defaultLoadSize<a name="line.197"></a>
+<span class="sourceLineNo">198</span>                }<a name="line.198"></a>
+<span class="sourceLineNo">199</span>                return false;<a name="line.199"></a>
+<span class="sourceLineNo">200</span>        }<a name="line.200"></a>
+<span class="sourceLineNo">201</span><a name="line.201"></a>
+<span class="sourceLineNo">202</span>        /**<a name="line.202"></a>
+<span class="sourceLineNo">203</span>         * Establish a connection to the security domain specified in the<a name="line.203"></a>
+<span class="sourceLineNo">204</span>         * constructor or discovered. This method is required before doing<a name="line.204"></a>
+<span class="sourceLineNo">205</span>         * {@link #openSecureChannel openSecureChannel}.<a name="line.205"></a>
+<span class="sourceLineNo">206</span>         *<a name="line.206"></a>
+<span class="sourceLineNo">207</span>         * @throws GPException<a name="line.207"></a>
+<span class="sourceLineNo">208</span>         *             if security domain selection fails for some reason<a name="line.208"></a>
+<span class="sourceLineNo">209</span>         * @throws CardException<a name="line.209"></a>
+<span class="sourceLineNo">210</span>         *             on data transmission errors<a name="line.210"></a>
+<span class="sourceLineNo">211</span>         */<a name="line.211"></a>
+<span class="sourceLineNo">212</span>        public void select() throws GPException, CardException, IOException {<a name="line.212"></a>
+<span class="sourceLineNo">213</span>                if (!select(null)) {<a name="line.213"></a>
+<span class="sourceLineNo">214</span>                        throw new GPException("Could not select security domain!");<a name="line.214"></a>
+<span class="sourceLineNo">215</span>                }<a name="line.215"></a>
+<span class="sourceLineNo">216</span>        }<a name="line.216"></a>
+<span class="sourceLineNo">217</span><a name="line.217"></a>
 <span class="sourceLineNo">218</span><a name="line.218"></a>
-<span class="sourceLineNo">219</span><a name="line.219"></a>
-<span class="sourceLineNo">220</span>        public List&lt;KeySet.Key&gt; getKeyInfoTemplate() throws CardException, GPException {<a name="line.220"></a>
-<span class="sourceLineNo">221</span>                // Key Information Template<a name="line.221"></a>
-<span class="sourceLineNo">222</span>                CommandAPDU command = new CommandAPDU(getGPCLA(), ISO7816.INS_GET_DATA, 0x00, 0xE0, 256);<a name="line.222"></a>
-<span class="sourceLineNo">223</span>                ResponseAPDU resp = always_transmit(command);<a name="line.223"></a>
-<span class="sourceLineNo">224</span><a name="line.224"></a>
-<span class="sourceLineNo">225</span>                if (resp.getSW() == ISO7816.SW_CLA_NOT_SUPPORTED) {<a name="line.225"></a>
-<span class="sourceLineNo">226</span>                        command = new CommandAPDU(ISO7816.CLA_ISO7816, ISO7816.INS_GET_DATA, 0x00, 0xE0, 256);<a name="line.226"></a>
-<span class="sourceLineNo">227</span>                        resp = always_transmit(command);<a name="line.227"></a>
-<span class="sourceLineNo">228</span>                }<a name="line.228"></a>
-<span class="sourceLineNo">229</span>                if (resp.getSW() == ISO7816.SW_NO_ERROR) {<a name="line.229"></a>
-<span class="sourceLineNo">230</span>                        return GlobalPlatformData.get_key_template_list(resp.getData(), SHORT_0);<a name="line.230"></a>
-<span class="sourceLineNo">231</span>                } else {<a name="line.231"></a>
-<span class="sourceLineNo">232</span>                        verbose("GET DATA(Key Information Template) not supported");<a name="line.232"></a>
-<span class="sourceLineNo">233</span>                }<a name="line.233"></a>
-<span class="sourceLineNo">234</span>                return GlobalPlatformData.get_key_template_list(null, SHORT_0);<a name="line.234"></a>
-<span class="sourceLineNo">235</span>        }<a name="line.235"></a>
-<span class="sourceLineNo">236</span><a name="line.236"></a>
-<span class="sourceLineNo">237</span>        public byte[] fetchCardData() throws CardException, GPException {<a name="line.237"></a>
-<span class="sourceLineNo">238</span>                // Card data<a name="line.238"></a>
-<span class="sourceLineNo">239</span>                CommandAPDU command = new CommandAPDU(getGPCLA(), ISO7816.INS_GET_DATA, 0x00, 0x66, 256);<a name="line.239"></a>
-<span class="sourceLineNo">240</span>                ResponseAPDU resp = always_transmit(command);<a name="line.240"></a>
-<span class="sourceLineNo">241</span>                if (resp.getSW() == 0x6A86) {<a name="line.241"></a>
-<span class="sourceLineNo">242</span>                        verbose("GET DATA(CardData) not supported, Open Platform 2.0.1 card? " + GPUtils.swToString(resp.getSW()));<a name="line.242"></a>
-<span class="sourceLineNo">243</span>                        return null;<a name="line.243"></a>
-<span class="sourceLineNo">244</span>                } else if (resp.getSW() == 0x9000) {<a name="line.244"></a>
-<span class="sourceLineNo">245</span>                        return resp.getData();<a name="line.245"></a>
-<span class="sourceLineNo">246</span>                }<a name="line.246"></a>
-<span class="sourceLineNo">247</span>                return null;<a name="line.247"></a>
-<span class="sourceLineNo">248</span>        }<a name="line.248"></a>
-<span class="sourceLineNo">249</span><a name="line.249"></a>
-<span class="sourceLineNo">250</span>        public void discoverCardProperties() throws CardException, GPException {<a name="line.250"></a>
-<span class="sourceLineNo">251</span><a name="line.251"></a>
-<span class="sourceLineNo">252</span>                // Key Information Template<a name="line.252"></a>
-<span class="sourceLineNo">253</span>                List&lt;Key&gt; key_templates = getKeyInfoTemplate();<a name="line.253"></a>
-<span class="sourceLineNo">254</span>                if (key_templates != null &amp;&amp; key_templates.size() &gt; 0) {<a name="line.254"></a>
-<span class="sourceLineNo">255</span>                        GlobalPlatformData.pretty_print_key_template(key_templates, System.out);<a name="line.255"></a>
-<span class="sourceLineNo">256</span>                }<a name="line.256"></a>
-<span class="sourceLineNo">257</span><a name="line.257"></a>
-<span class="sourceLineNo">258</span>                System.out.println("***** GET DATA:");<a name="line.258"></a>
-<span class="sourceLineNo">259</span><a name="line.259"></a>
-<span class="sourceLineNo">260</span>                // Issuer Identification Number (IIN)<a name="line.260"></a>
-<span class="sourceLineNo">261</span>                CommandAPDU command = new CommandAPDU(CLA_GP, ISO7816.INS_GET_DATA, 0x00, 0x42, 256);<a name="line.261"></a>
-<span class="sourceLineNo">262</span>                ResponseAPDU resp = channel.transmit(command);<a name="line.262"></a>
-<span class="sourceLineNo">263</span>                if (resp.getSW() == 0x9000) {<a name="line.263"></a>
-<span class="sourceLineNo">264</span>                        System.out.println("IIN " + LoggingCardTerminal.encodeHexString(resp.getData()));<a name="line.264"></a>
-<span class="sourceLineNo">265</span>                } else {<a name="line.265"></a>
-<span class="sourceLineNo">266</span>                        System.out.println("GET DATA(IIN) not supported");<a name="line.266"></a>
-<span class="sourceLineNo">267</span>                }<a name="line.267"></a>
-<span class="sourceLineNo">268</span><a name="line.268"></a>
-<span class="sourceLineNo">269</span>                // Card Image Number (CIN)<a name="line.269"></a>
-<span class="sourceLineNo">270</span>                command = new CommandAPDU(CLA_GP, ISO7816.INS_GET_DATA, 0x00, 0x45, 256);<a name="line.270"></a>
-<span class="sourceLineNo">271</span>                resp = channel.transmit(command);<a name="line.271"></a>
-<span class="sourceLineNo">272</span>                if (resp.getSW() == 0x9000) {<a name="line.272"></a>
-<span class="sourceLineNo">273</span>                        System.out.println("CIN " + LoggingCardTerminal.encodeHexString(resp.getData()));<a name="line.273"></a>
-<span class="sourceLineNo">274</span>                } else {<a name="line.274"></a>
-<span class="sourceLineNo">275</span>                        System.out.println("GET DATA(CIN) not supported");<a name="line.275"></a>
-<span class="sourceLineNo">276</span>                }<a name="line.276"></a>
-<span class="sourceLineNo">277</span><a name="line.277"></a>
-<span class="sourceLineNo">278</span>                // Sequence Counter of the default Key Version Number<a name="line.278"></a>
-<span class="sourceLineNo">279</span>                command = new CommandAPDU(CLA_GP, ISO7816.INS_GET_DATA, 0x00, 0xC1, 256);<a name="line.279"></a>
-<span class="sourceLineNo">280</span>                resp = channel.transmit(command);<a name="line.280"></a>
-<span class="sourceLineNo">281</span>                if (resp.getSW() == 0x9000) {<a name="line.281"></a>
-<span class="sourceLineNo">282</span>                        byte [] ssc = resp.getData();<a name="line.282"></a>
-<span class="sourceLineNo">283</span>                        TLVUtils.expectTag(ssc, SHORT_0, (byte) 0xC1);<a name="line.283"></a>
-<span class="sourceLineNo">284</span>                        System.out.println("SSC " + LoggingCardTerminal.encodeHexString(TLVUtils.getTLVValueAsBytes(ssc, SHORT_0)));<a name="line.284"></a>
-<span class="sourceLineNo">285</span>                } else {<a name="line.285"></a>
-<span class="sourceLineNo">286</span>                        System.out.println("GET DATA(SSC) not supported");<a name="line.286"></a>
-<span class="sourceLineNo">287</span>                }<a name="line.287"></a>
-<span class="sourceLineNo">288</span>                System.out.println("*****");<a name="line.288"></a>
-<span class="sourceLineNo">289</span>        }<a name="line.289"></a>
-<span class="sourceLineNo">290</span><a name="line.290"></a>
-<span class="sourceLineNo">291</span>        public byte[] fetchCPLC() throws CardException, GPException {<a name="line.291"></a>
-<span class="sourceLineNo">292</span>                CommandAPDU command = new CommandAPDU(getGPCLA(), ISO7816.INS_GET_DATA, 0x9F, 0x7F, 256);<a name="line.292"></a>
-<span class="sourceLineNo">293</span>                ResponseAPDU resp = always_transmit(command);<a name="line.293"></a>
-<span class="sourceLineNo">294</span>                // If GP CLA fails, try with ISO<a name="line.294"></a>
-<span class="sourceLineNo">295</span>                if (resp.getSW() == ISO7816.SW_CLA_NOT_SUPPORTED) {<a name="line.295"></a>
-<span class="sourceLineNo">296</span>                        command = new CommandAPDU(ISO7816.CLA_ISO7816, ISO7816.INS_GET_DATA, 0x9F, 0x7F, 256);<a name="line.296"></a>
-<span class="sourceLineNo">297</span>                        resp = always_transmit(command);<a name="line.297"></a>
-<span class="sourceLineNo">298</span>                }<a name="line.298"></a>
-<span class="sourceLineNo">299</span><a name="line.299"></a>
-<span class="sourceLineNo">300</span>                if (resp.getSW() == ISO7816.SW_NO_ERROR) {<a name="line.300"></a>
-<span class="sourceLineNo">301</span>                        return resp.getData();<a name="line.301"></a>
-<span class="sourceLineNo">302</span>                } else {<a name="line.302"></a>
-<span class="sourceLineNo">303</span>                        verbose("GET DATA(CPLC) returned SW: " + GPUtils.swToString(resp.getSW()));<a name="line.303"></a>
-<span class="sourceLineNo">304</span>                }<a name="line.304"></a>
-<span class="sourceLineNo">305</span>                return null;<a name="line.305"></a>
-<span class="sourceLineNo">306</span>        }<a name="line.306"></a>
-<span class="sourceLineNo">307</span><a name="line.307"></a>
-<span class="sourceLineNo">308</span>        public byte[] getCPLC() throws CardException, GPException {<a name="line.308"></a>
-<span class="sourceLineNo">309</span>                if (cplc == null)<a name="line.309"></a>
-<span class="sourceLineNo">310</span>                        cplc = fetchCPLC();<a name="line.310"></a>
-<span class="sourceLineNo">311</span>                return cplc;<a name="line.311"></a>
-<span class="sourceLineNo">312</span>        }<a name="line.312"></a>
-<span class="sourceLineNo">313</span><a name="line.313"></a>
-<span class="sourceLineNo">314</span>        /**<a name="line.314"></a>
-<span class="sourceLineNo">315</span>         * Establishes a secure channel to the security domain. The security domain<a name="line.315"></a>
-<span class="sourceLineNo">316</span>         * must have been selected with {@link open open} before.<a name="line.316"></a>
-<span class="sourceLineNo">317</span>         *<a name="line.317"></a>
-<span class="sourceLineNo">318</span>         * @throws IllegalArgumentException<a name="line.318"></a>
-<span class="sourceLineNo">319</span>         *             if the arguments are out of range or the keyset is undefined<a name="line.319"></a>
-<span class="sourceLineNo">320</span>         * @throws CardException<a name="line.320"></a>
-<span class="sourceLineNo">321</span>         *             if some communication problem is encountered.<a name="line.321"></a>
-<span class="sourceLineNo">322</span>         */<a name="line.322"></a>
-<span class="sourceLineNo">323</span>        public void openSecureChannel(KeySet staticKeys, int scpVersion, EnumSet&lt;APDUMode&gt; securityLevel)<a name="line.323"></a>
-<span class="sourceLineNo">324</span>                        throws CardException, GPException {<a name="line.324"></a>
-<span class="sourceLineNo">325</span><a name="line.325"></a>
-<span class="sourceLineNo">326</span>                if (sdAID == null)<a name="line.326"></a>
-<span class="sourceLineNo">327</span>                        throw new IllegalStateException("No selected ISD!");<a name="line.327"></a>
-<span class="sourceLineNo">328</span><a name="line.328"></a>
-<span class="sourceLineNo">329</span>                this.staticKeys = staticKeys;<a name="line.329"></a>
-<span class="sourceLineNo">330</span>                KeySet sessionKeys = null;<a name="line.330"></a>
-<span class="sourceLineNo">331</span><a name="line.331"></a>
-<span class="sourceLineNo">332</span>                // check for diversification<a name="line.332"></a>
-<span class="sourceLineNo">333</span>                if (Arrays.equals(staticKeys.getKey(KeyType.MAC), GlobalPlatformData.defaultKey) &amp;&amp; strict) {<a name="line.333"></a>
-<span class="sourceLineNo">334</span>                        if (GlobalPlatformData.suggestDiversification(getCPLC()) != KeyDiversification.NONE<a name="line.334"></a>
-<span class="sourceLineNo">335</span>                                        &amp;&amp; !staticKeys.needsDiversity() &amp;&amp; staticKeys.getKeyVersion() == 0x00)<a name="line.335"></a>
-<span class="sourceLineNo">336</span>                                printStrictWarning("Card probably requires EMV diversification but no diversification specified!");<a name="line.336"></a>
-<span class="sourceLineNo">337</span>                }<a name="line.337"></a>
-<span class="sourceLineNo">338</span><a name="line.338"></a>
-<span class="sourceLineNo">339</span>                if ((scpVersion &lt; SCP_ANY) || (scpVersion &gt; SCP_02_1B)) {<a name="line.339"></a>
-<span class="sourceLineNo">340</span>                        throw new IllegalArgumentException("Invalid SCP version.");<a name="line.340"></a>
-<span class="sourceLineNo">341</span>                }<a name="line.341"></a>
-<span class="sourceLineNo">342</span><a name="line.342"></a>
-<span class="sourceLineNo">343</span>                if ((scpVersion == SCP_02_0A) || (scpVersion == SCP_02_0B) || (scpVersion == SCP_02_1A) || (scpVersion == SCP_02_1B)) {<a name="line.343"></a>
-<span class="sourceLineNo">344</span>                        throw new IllegalArgumentException("Implicit secure channels cannot be initialized explicitly (use the constructor).");<a name="line.344"></a>
-<span class="sourceLineNo">345</span>                }<a name="line.345"></a>
-<span class="sourceLineNo">346</span><a name="line.346"></a>
-<span class="sourceLineNo">347</span>                // ENC requires MAC<a name="line.347"></a>
-<span class="sourceLineNo">348</span>                if (securityLevel.contains(APDUMode.ENC))<a name="line.348"></a>
-<span class="sourceLineNo">349</span>                        securityLevel.add(APDUMode.MAC);<a name="line.349"></a>
-<span class="sourceLineNo">350</span><a name="line.350"></a>
-<span class="sourceLineNo">351</span>                // Parameters check done.<a name="line.351"></a>
-<span class="sourceLineNo">352</span>                byte[] rand = new byte[8];<a name="line.352"></a>
-<span class="sourceLineNo">353</span>                SecureRandom sr = new SecureRandom();<a name="line.353"></a>
-<span class="sourceLineNo">354</span>                sr.nextBytes(rand);<a name="line.354"></a>
-<span class="sourceLineNo">355</span><a name="line.355"></a>
-<span class="sourceLineNo">356</span>                // P1 key version (SCP1)<a name="line.356"></a>
-<span class="sourceLineNo">357</span>                // P2 either key ID (SCP01) or 0 (SCP2)<a name="line.357"></a>
-<span class="sourceLineNo">358</span>                // TODO: use it here for KeyID?<a name="line.358"></a>
-<span class="sourceLineNo">359</span>                CommandAPDU initUpdate = new CommandAPDU(CLA_GP, INS_INITIALIZE_UPDATE, staticKeys.getKeyVersion(), staticKeys.getKeyID(), rand);<a name="line.359"></a>
-<span class="sourceLineNo">360</span><a name="line.360"></a>
-<span class="sourceLineNo">361</span>                ResponseAPDU response = channel.transmit(initUpdate);<a name="line.361"></a>
-<span class="sourceLineNo">362</span>                int sw = response.getSW();<a name="line.362"></a>
-<span class="sourceLineNo">363</span><a name="line.363"></a>
-<span class="sourceLineNo">364</span>                // Detect and report locked cards in a more sensible way.<a name="line.364"></a>
-<span class="sourceLineNo">365</span>                if ((sw == ISO7816.SW_SECURITY_STATUS_NOT_SATISFIED) || (sw == ISO7816.SW_AUTHENTICATION_METHOD_BLOCKED)) {<a name="line.365"></a>
-<span class="sourceLineNo">366</span>                        throw new GPException(sw, "INITIALIZE UPDATE failed, card LOCKED?");<a name="line.366"></a>
-<span class="sourceLineNo">367</span>                }<a name="line.367"></a>
-<span class="sourceLineNo">368</span><a name="line.368"></a>
-<span class="sourceLineNo">369</span>                // Detect all other errors<a name="line.369"></a>
-<span class="sourceLineNo">370</span>                check(response, "INITIALIZE UPDATE failed");<a name="line.370"></a>
-<span class="sourceLineNo">371</span><a name="line.371"></a>
-<span class="sourceLineNo">372</span>                byte[] update_response = response.getData();<a name="line.372"></a>
-<span class="sourceLineNo">373</span>                if (update_response.length != 28) {<a name="line.373"></a>
-<span class="sourceLineNo">374</span>                        throw new GPException("Wrong INITIALIZE UPDATE response length: " + update_response.length);<a name="line.374"></a>
-<span class="sourceLineNo">375</span>                }<a name="line.375"></a>
-<span class="sourceLineNo">376</span>                // Set default SCP version based on major version<a name="line.376"></a>
-<span class="sourceLineNo">377</span>                if (scpVersion == SCP_ANY) {<a name="line.377"></a>
-<span class="sourceLineNo">378</span>                        scpVersion = update_response[11] == 2 ? SCP_02_15 : SCP_01_05;<a name="line.378"></a>
-<span class="sourceLineNo">379</span>                }<a name="line.379"></a>
-<span class="sourceLineNo">380</span>                scpMajorVersion = (scpVersion &lt; SCP_02_04) ? 1 : 2;<a name="line.380"></a>
-<span class="sourceLineNo">381</span>                if (scpMajorVersion != update_response[11]) {<a name="line.381"></a>
-<span class="sourceLineNo">382</span>                        throw new GPException("Secure Channel Protocol version mismatch: " + scpMajorVersion + " vs " + update_response[11]);<a name="line.382"></a>
-<span class="sourceLineNo">383</span>                }<a name="line.383"></a>
-<span class="sourceLineNo">384</span>                // Remove RMAC if SCP01 TODO: this should be generic sanitizer somewhere<a name="line.384"></a>
-<span class="sourceLineNo">385</span>                if (scpMajorVersion == 1)<a name="line.385"></a>
-<span class="sourceLineNo">386</span>                        securityLevel.remove(APDUMode.RMAC);<a name="line.386"></a>
-<span class="sourceLineNo">387</span><a name="line.387"></a>
-<span class="sourceLineNo">388</span>                verbose("Using SCP0" + scpMajorVersion + " with static version " + (update_response[10] &amp; 0xff) + " keys: " + staticKeys);<a name="line.388"></a>
-<span class="sourceLineNo">389</span><a name="line.389"></a>
-<span class="sourceLineNo">390</span>                // Only diversify default key sets that require it.<a name="line.390"></a>
-<span class="sourceLineNo">391</span>                if ((staticKeys.getKeyVersion() == 0) || (staticKeys.getKeyVersion() == 255)) {<a name="line.391"></a>
-<span class="sourceLineNo">392</span>                        if (staticKeys.needsDiversity()) {<a name="line.392"></a>
-<span class="sourceLineNo">393</span>                                staticKeys.diversify(update_response);<a name="line.393"></a>
-<span class="sourceLineNo">394</span>                                verbose("Diversififed keys: " + staticKeys);<a name="line.394"></a>
-<span class="sourceLineNo">395</span>                        }<a name="line.395"></a>
-<span class="sourceLineNo">396</span>                }<a name="line.396"></a>
-<span class="sourceLineNo">397</span><a name="line.397"></a>
-<span class="sourceLineNo">398</span>                // If using explicit key version, it must match.<a name="line.398"></a>
-<span class="sourceLineNo">399</span>                if ((staticKeys.getKeyVersion() &gt; 0) &amp;&amp; ((update_response[10] &amp; 0xff) != staticKeys.getKeyVersion())) {<a name="line.399"></a>
-<span class="sourceLineNo">400</span>                        throw new GPException("Key set mismatch.");<a name="line.400"></a>
-<span class="sourceLineNo">401</span>                }<a name="line.401"></a>
-<span class="sourceLineNo">402</span><a name="line.402"></a>
-<span class="sourceLineNo">403</span>                if (scpMajorVersion == 1) {<a name="line.403"></a>
-<span class="sourceLineNo">404</span>                        sessionKeys = deriveSessionKeysSCP01(staticKeys, rand, update_response);<a name="line.404"></a>
-<span class="sourceLineNo">405</span>                } else if (scpMajorVersion == 2) {<a name="line.405"></a>
-<span class="sourceLineNo">406</span>                        byte [] seq = Arrays.copyOfRange(update_response, 12, 14);<a name="line.406"></a>
-<span class="sourceLineNo">407</span>                        sessionKeys = deriveSessionKeysSCP02(staticKeys, seq, false);<a name="line.407"></a>
-<span class="sourceLineNo">408</span>                } else {<a name="line.408"></a>
-<span class="sourceLineNo">409</span>                        throw new GPException("SCP03 is still unexplored");<a name="line.409"></a>
-<span class="sourceLineNo">410</span>                }<a name="line.410"></a>
-<span class="sourceLineNo">411</span>                verbose("Session keys: " + sessionKeys);<a name="line.411"></a>
+<span class="sourceLineNo">219</span>        public List&lt;KeySet.Key&gt; getKeyInfoTemplate() throws CardException, GPException {<a name="line.219"></a>
+<span class="sourceLineNo">220</span>                // Key Information Template<a name="line.220"></a>
+<span class="sourceLineNo">221</span>                CommandAPDU command = new CommandAPDU(getGPCLA(), ISO7816.INS_GET_DATA, 0x00, 0xE0, 256);<a name="line.221"></a>
+<span class="sourceLineNo">222</span>                ResponseAPDU resp = always_transmit(command);<a name="line.222"></a>
+<span class="sourceLineNo">223</span><a name="line.223"></a>
+<span class="sourceLineNo">224</span>                if (resp.getSW() == ISO7816.SW_CLA_NOT_SUPPORTED) {<a name="line.224"></a>
+<span class="sourceLineNo">225</span>                        command = new CommandAPDU(ISO7816.CLA_ISO7816, ISO7816.INS_GET_DATA, 0x00, 0xE0, 256);<a name="line.225"></a>
+<span class="sourceLineNo">226</span>                        resp = always_transmit(command);<a name="line.226"></a>
+<span class="sourceLineNo">227</span>                }<a name="line.227"></a>
+<span class="sourceLineNo">228</span>                if (resp.getSW() == ISO7816.SW_NO_ERROR) {<a name="line.228"></a>
+<span class="sourceLineNo">229</span>                        return GlobalPlatformData.get_key_template_list(resp.getData(), SHORT_0);<a name="line.229"></a>
+<span class="sourceLineNo">230</span>                } else {<a name="line.230"></a>
+<span class="sourceLineNo">231</span>                        verbose("GET DATA(Key Information Template) not supported");<a name="line.231"></a>
+<span class="sourceLineNo">232</span>                }<a name="line.232"></a>
+<span class="sourceLineNo">233</span>                return GlobalPlatformData.get_key_template_list(null, SHORT_0);<a name="line.233"></a>
+<span class="sourceLineNo">234</span>        }<a name="line.234"></a>
+<span class="sourceLineNo">235</span><a name="line.235"></a>
+<span class="sourceLineNo">236</span>        public byte[] fetchCardData() throws CardException, GPException {<a name="line.236"></a>
+<span class="sourceLineNo">237</span>                // Card data<a name="line.237"></a>
+<span class="sourceLineNo">238</span>                CommandAPDU command = new CommandAPDU(getGPCLA(), ISO7816.INS_GET_DATA, 0x00, 0x66, 256);<a name="line.238"></a>
+<span class="sourceLineNo">239</span>                ResponseAPDU resp = always_transmit(command);<a name="line.239"></a>
+<span class="sourceLineNo">240</span>                if (resp.getSW() == 0x6A86) {<a name="line.240"></a>
+<span class="sourceLineNo">241</span>                        verbose("GET DATA(CardData) not supported, Open Platform 2.0.1 card? " + GPUtils.swToString(resp.getSW()));<a name="line.241"></a>
+<span class="sourceLineNo">242</span>                        return null;<a name="line.242"></a>
+<span class="sourceLineNo">243</span>                } else if (resp.getSW() == 0x9000) {<a name="line.243"></a>
+<span class="sourceLineNo">244</span>                        return resp.getData();<a name="line.244"></a>
+<span class="sourceLineNo">245</span>                }<a name="line.245"></a>
+<span class="sourceLineNo">246</span>                return null;<a name="line.246"></a>
+<span class="sourceLineNo">247</span>        }<a name="line.247"></a>
+<span class="sourceLineNo">248</span><a name="line.248"></a>
+<span class="sourceLineNo">249</span>        public void discoverCardProperties() throws CardException, GPException {<a name="line.249"></a>
+<span class="sourceLineNo">250</span><a name="line.250"></a>
+<span class="sourceLineNo">251</span>                // Key Information Template<a name="line.251"></a>
+<span class="sourceLineNo">252</span>                List&lt;Key&gt; key_templates = getKeyInfoTemplate();<a name="line.252"></a>
+<span class="sourceLineNo">253</span>                if (key_templates != null &amp;&amp; key_templates.size() &gt; 0) {<a name="line.253"></a>
+<span class="sourceLineNo">254</span>                        GlobalPlatformData.pretty_print_key_template(key_templates, System.out);<a name="line.254"></a>
+<span class="sourceLineNo">255</span>                }<a name="line.255"></a>
+<span class="sourceLineNo">256</span><a name="line.256"></a>
+<span class="sourceLineNo">257</span>                System.out.println("***** GET DATA:");<a name="line.257"></a>
+<span class="sourceLineNo">258</span><a name="line.258"></a>
+<span class="sourceLineNo">259</span>                // Issuer Identification Number (IIN)<a name="line.259"></a>
+<span class="sourceLineNo">260</span>                CommandAPDU command = new CommandAPDU(CLA_GP, ISO7816.INS_GET_DATA, 0x00, 0x42, 256);<a name="line.260"></a>
+<span class="sourceLineNo">261</span>                ResponseAPDU resp = channel.transmit(command);<a name="line.261"></a>
+<span class="sourceLineNo">262</span>                if (resp.getSW() == 0x9000) {<a name="line.262"></a>
+<span class="sourceLineNo">263</span>                        System.out.println("IIN " + LoggingCardTerminal.encodeHexString(resp.getData()));<a name="line.263"></a>
+<span class="sourceLineNo">264</span>                } else {<a name="line.264"></a>
+<span class="sourceLineNo">265</span>                        System.out.println("GET DATA(IIN) not supported");<a name="line.265"></a>
+<span class="sourceLineNo">266</span>                }<a name="line.266"></a>
+<span class="sourceLineNo">267</span><a name="line.267"></a>
+<span class="sourceLineNo">268</span>                // Card Image Number (CIN)<a name="line.268"></a>
+<span class="sourceLineNo">269</span>                command = new CommandAPDU(CLA_GP, ISO7816.INS_GET_DATA, 0x00, 0x45, 256);<a name="line.269"></a>
+<span class="sourceLineNo">270</span>                resp = channel.transmit(command);<a name="line.270"></a>
+<span class="sourceLineNo">271</span>                if (resp.getSW() == 0x9000) {<a name="line.271"></a>
+<span class="sourceLineNo">272</span>                        System.out.println("CIN " + LoggingCardTerminal.encodeHexString(resp.getData()));<a name="line.272"></a>
+<span class="sourceLineNo">273</span>                } else {<a name="line.273"></a>
+<span class="sourceLineNo">274</span>                        System.out.println("GET DATA(CIN) not supported");<a name="line.274"></a>
+<span class="sourceLineNo">275</span>                }<a name="line.275"></a>
+<span class="sourceLineNo">276</span><a name="line.276"></a>
+<span class="sourceLineNo">277</span>                // Sequence Counter of the default Key Version Number<a name="line.277"></a>
+<span class="sourceLineNo">278</span>                command = new CommandAPDU(CLA_GP, ISO7816.INS_GET_DATA, 0x00, 0xC1, 256);<a name="line.278"></a>
+<span class="sourceLineNo">279</span>                resp = channel.transmit(command);<a name="line.279"></a>
+<span class="sourceLineNo">280</span>                if (resp.getSW() == 0x9000) {<a name="line.280"></a>
+<span class="sourceLineNo">281</span>                        byte [] ssc = resp.getData();<a name="line.281"></a>
+<span class="sourceLineNo">282</span>                        TLVUtils.expectTag(ssc, SHORT_0, (byte) 0xC1);<a name="line.282"></a>
+<span class="sourceLineNo">283</span>                        System.out.println("SSC " + LoggingCardTerminal.encodeHexString(TLVUtils.getTLVValueAsBytes(ssc, SHORT_0)));<a name="line.283"></a>
+<span class="sourceLineNo">284</span>                } else {<a name="line.284"></a>
+<span class="sourceLineNo">285</span>                        System.out.println("GET DATA(SSC) not supported");<a name="line.285"></a>
+<span class="sourceLineNo">286</span>                }<a name="line.286"></a>
+<span class="sourceLineNo">287</span>                System.out.println("*****");<a name="line.287"></a>
+<span class="sourceLineNo">288</span>        }<a name="line.288"></a>
+<span class="sourceLineNo">289</span><a name="line.289"></a>
+<span class="sourceLineNo">290</span>        public byte[] fetchCPLC() throws CardException, GPException {<a name="line.290"></a>
+<span class="sourceLineNo">291</span>                CommandAPDU command = new CommandAPDU(getGPCLA(), ISO7816.INS_GET_DATA, 0x9F, 0x7F, 256);<a name="line.291"></a>
+<span class="sourceLineNo">292</span>                ResponseAPDU resp = always_transmit(command);<a name="line.292"></a>
+<span class="sourceLineNo">293</span>                // If GP CLA fails, try with ISO<a name="line.293"></a>
+<span class="sourceLineNo">294</span>                if (resp.getSW() == ISO7816.SW_CLA_NOT_SUPPORTED) {<a name="line.294"></a>
+<span class="sourceLineNo">295</span>                        command = new CommandAPDU(ISO7816.CLA_ISO7816, ISO7816.INS_GET_DATA, 0x9F, 0x7F, 256);<a name="line.295"></a>
+<span class="sourceLineNo">296</span>                        resp = always_transmit(command);<a name="line.296"></a>
+<span class="sourceLineNo">297</span>                }<a name="line.297"></a>
+<span class="sourceLineNo">298</span><a name="line.298"></a>
+<span class="sourceLineNo">299</span>                if (resp.getSW() == ISO7816.SW_NO_ERROR) {<a name="line.299"></a>
+<span class="sourceLineNo">300</span>                        return resp.getData();<a name="line.300"></a>
+<span class="sourceLineNo">301</span>                } else {<a name="line.301"></a>
+<span class="sourceLineNo">302</span>                        verbose("GET DATA(CPLC) returned SW: " + GPUtils.swToString(resp.getSW()));<a name="line.302"></a>
+<span class="sourceLineNo">303</span>                }<a name="line.303"></a>
+<span class="sourceLineNo">304</span>                return null;<a name="line.304"></a>
+<span class="sourceLineNo">305</span>        }<a name="line.305"></a>
+<span class="sourceLineNo">306</span><a name="line.306"></a>
+<span class="sourceLineNo">307</span>        public byte[] getCPLC() throws CardException, GPException {<a name="line.307"></a>
+<span class="sourceLineNo">308</span>                if (cplc == null)<a name="line.308"></a>
+<span class="sourceLineNo">309</span>                        cplc = fetchCPLC();<a name="line.309"></a>
+<span class="sourceLineNo">310</span>                return cplc;<a name="line.310"></a>
+<span class="sourceLineNo">311</span>        }<a name="line.311"></a>
+<span class="sourceLineNo">312</span><a name="line.312"></a>
+<span class="sourceLineNo">313</span>        /**<a name="line.313"></a>
+<span class="sourceLineNo">314</span>         * Establishes a secure channel to the security domain. The security domain<a name="line.314"></a>
+<span class="sourceLineNo">315</span>         * must have been selected with {@link open open} before.<a name="line.315"></a>
+<span class="sourceLineNo">316</span>         *<a name="line.316"></a>
+<span class="sourceLineNo">317</span>         * @throws IllegalArgumentException<a name="line.317"></a>
+<span class="sourceLineNo">318</span>         *             if the arguments are out of range or the keyset is undefined<a name="line.318"></a>
+<span class="sourceLineNo">319</span>         * @throws CardException<a name="line.319"></a>
+<span class="sourceLineNo">320</span>         *             if some communication problem is encountered.<a name="line.320"></a>
+<span class="sourceLineNo">321</span>         */<a name="line.321"></a>
+<span class="sourceLineNo">322</span>        public void openSecureChannel(KeySet staticKeys, int scpVersion, EnumSet&lt;APDUMode&gt; securityLevel)<a name="line.322"></a>
+<span class="sourceLineNo">323</span>                        throws CardException, GPException {<a name="line.323"></a>
+<span class="sourceLineNo">324</span><a name="line.324"></a>
+<span class="sourceLineNo">325</span>                if (sdAID == null)<a name="line.325"></a>
+<span class="sourceLineNo">326</span>                        throw new IllegalStateException("No selected ISD!");<a name="line.326"></a>
+<span class="sourceLineNo">327</span><a name="line.327"></a>
+<span class="sourceLineNo">328</span>                this.staticKeys = staticKeys;<a name="line.328"></a>
+<span class="sourceLineNo">329</span>                KeySet sessionKeys = null;<a name="line.329"></a>
+<span class="sourceLineNo">330</span><a name="line.330"></a>
+<span class="sourceLineNo">331</span>                // check for diversification<a name="line.331"></a>
+<span class="sourceLineNo">332</span>                if (Arrays.equals(staticKeys.getKey(KeyType.MAC), GlobalPlatformData.defaultKey) &amp;&amp; strict) {<a name="line.332"></a>
+<span class="sourceLineNo">333</span>                        if (GlobalPlatformData.suggestDiversification(getCPLC()) != KeyDiversification.NONE<a name="line.333"></a>
+<span class="sourceLineNo">334</span>                                        &amp;&amp; !staticKeys.needsDiversity() &amp;&amp; staticKeys.getKeyVersion() == 0x00)<a name="line.334"></a>
+<span class="sourceLineNo">335</span>                                printStrictWarning("Card probably requires EMV diversification but no diversification specified!");<a name="line.335"></a>
+<span class="sourceLineNo">336</span>                }<a name="line.336"></a>
+<span class="sourceLineNo">337</span><a name="line.337"></a>
+<span class="sourceLineNo">338</span>                if ((scpVersion &lt; SCP_ANY) || (scpVersion &gt; SCP_02_1B)) {<a name="line.338"></a>
+<span class="sourceLineNo">339</span>                        throw new IllegalArgumentException("Invalid SCP version.");<a name="line.339"></a>
+<span class="sourceLineNo">340</span>                }<a name="line.340"></a>
+<span class="sourceLineNo">341</span><a name="line.341"></a>
+<span class="sourceLineNo">342</span>                if ((scpVersion == SCP_02_0A) || (scpVersion == SCP_02_0B) || (scpVersion == SCP_02_1A) || (scpVersion == SCP_02_1B)) {<a name="line.342"></a>
+<span class="sourceLineNo">343</span>                        throw new IllegalArgumentException("Implicit secure channels cannot be initialized explicitly (use the constructor).");<a name="line.343"></a>
+<span class="sourceLineNo">344</span>                }<a name="line.344"></a>
+<span class="sourceLineNo">345</span><a name="line.345"></a>
+<span class="sourceLineNo">346</span>                // ENC requires MAC<a name="line.346"></a>
+<span class="sourceLineNo">347</span>                if (securityLevel.contains(APDUMode.ENC))<a name="line.347"></a>
+<span class="sourceLineNo">348</span>                        securityLevel.add(APDUMode.MAC);<a name="line.348"></a>
+<span class="sourceLineNo">349</span><a name="line.349"></a>
+<span class="sourceLineNo">350</span>                // Parameters check done.<a name="line.350"></a>
+<span class="sourceLineNo">351</span>                byte[] rand = new byte[8];<a name="line.351"></a>
+<span class="sourceLineNo">352</span>                SecureRandom sr = new SecureRandom();<a name="line.352"></a>
+<span class="sourceLineNo">353</span>                sr.nextBytes(rand);<a name="line.353"></a>
+<span class="sourceLineNo">354</span><a name="line.354"></a>
+<span class="sourceLineNo">355</span>                // P1 key version (SCP1)<a name="line.355"></a>
+<span class="sourceLineNo">356</span>                // P2 either key ID (SCP01) or 0 (SCP2)<a name="line.356"></a>
+<span class="sourceLineNo">357</span>                // TODO: use it here for KeyID?<a name="line.357"></a>
+<span class="sourceLineNo">358</span>                CommandAPDU initUpdate = new CommandAPDU(CLA_GP, INS_INITIALIZE_UPDATE, staticKeys.getKeyVersion(), staticKeys.getKeyID(), rand);<a name="line.358"></a>
+<span class="sourceLineNo">359</span><a name="line.359"></a>
+<span class="sourceLineNo">360</span>                ResponseAPDU response = channel.transmit(initUpdate);<a name="line.360"></a>
+<span class="sourceLineNo">361</span>                int sw = response.getSW();<a name="line.361"></a>
+<span class="sourceLineNo">362</span><a name="line.362"></a>
+<span class="sourceLineNo">363</span>                // Detect and report locked cards in a more sensible way.<a name="line.363"></a>
+<span class="sourceLineNo">364</span>                if ((sw == ISO7816.SW_SECURITY_STATUS_NOT_SATISFIED) || (sw == ISO7816.SW_AUTHENTICATION_METHOD_BLOCKED)) {<a name="line.364"></a>
+<span class="sourceLineNo">365</span>                        throw new GPException(sw, "INITIALIZE UPDATE failed, card LOCKED?");<a name="line.365"></a>
+<span class="sourceLineNo">366</span>                }<a name="line.366"></a>
+<span class="sourceLineNo">367</span><a name="line.367"></a>
+<span class="sourceLineNo">368</span>                // Detect all other errors<a name="line.368"></a>
+<span class="sourceLineNo">369</span>                check(response, "INITIALIZE UPDATE failed");<a name="line.369"></a>
+<span class="sourceLineNo">370</span><a name="line.370"></a>
+<span class="sourceLineNo">371</span>                byte[] update_response = response.getData();<a name="line.371"></a>
+<span class="sourceLineNo">372</span>                if (update_response.length != 28) {<a name="line.372"></a>
+<span class="sourceLineNo">373</span>                        throw new GPException("Wrong INITIALIZE UPDATE response length: " + update_response.length);<a name="line.373"></a>
+<span class="sourceLineNo">374</span>                }<a name="line.374"></a>
+<span class="sourceLineNo">375</span>                // Set default SCP version based on major version<a name="line.375"></a>
+<span class="sourceLineNo">376</span>                if (scpVersion == SCP_ANY) {<a name="line.376"></a>
+<span class="sourceLineNo">377</span>                        scpVersion = update_response[11] == 2 ? SCP_02_15 : SCP_01_05;<a name="line.377"></a>
+<span class="sourceLineNo">378</span>                }<a name="line.378"></a>
+<span class="sourceLineNo">379</span>                scpMajorVersion = (scpVersion &lt; SCP_02_04) ? 1 : 2;<a name="line.379"></a>
+<span class="sourceLineNo">380</span>                if (scpMajorVersion != update_response[11]) {<a name="line.380"></a>
+<span class="sourceLineNo">381</span>                        throw new GPException("Secure Channel Protocol version mismatch: " + scpMajorVersion + " vs " + update_response[11]);<a name="line.381"></a>
+<span class="sourceLineNo">382</span>                }<a name="line.382"></a>
+<span class="sourceLineNo">383</span>                // Remove RMAC if SCP01 TODO: this should be generic sanitizer somewhere<a name="line.383"></a>
+<span class="sourceLineNo">384</span>                if (scpMajorVersion == 1)<a name="line.384"></a>
+<span class="sourceLineNo">385</span>                        securityLevel.remove(APDUMode.RMAC);<a name="line.385"></a>
+<span class="sourceLineNo">386</span><a name="line.386"></a>
+<span class="sourceLineNo">387</span>                verbose("Using SCP0" + scpMajorVersion + " with static version " + (update_response[10] &amp; 0xff) + " keys: " + staticKeys);<a name="line.387"></a>
+<span class="sourceLineNo">388</span><a name="line.388"></a>
+<span class="sourceLineNo">389</span>                // Only diversify default key sets that require it.<a name="line.389"></a>
+<span class="sourceLineNo">390</span>                if ((staticKeys.getKeyVersion() == 0) || (staticKeys.getKeyVersion() == 255)) {<a name="line.390"></a>
+<span class="sourceLineNo">391</span>                        if (staticKeys.needsDiversity()) {<a name="line.391"></a>
+<span class="sourceLineNo">392</span>                                staticKeys.diversify(update_response);<a name="line.392"></a>
+<span class="sourceLineNo">393</span>                                verbose("Diversififed keys: " + staticKeys);<a name="line.393"></a>
+<span class="sourceLineNo">394</span>                        }<a name="line.394"></a>
+<span class="sourceLineNo">395</span>                }<a name="line.395"></a>
+<span class="sourceLineNo">396</span><a name="line.396"></a>
+<span class="sourceLineNo">397</span>                // If using explicit key version, it must match.<a name="line.397"></a>
+<span class="sourceLineNo">398</span>                if ((staticKeys.getKeyVersion() &gt; 0) &amp;&amp; ((update_response[10] &amp; 0xff) != staticKeys.getKeyVersion())) {<a name="line.398"></a>
+<span class="sourceLineNo">399</span>                        throw new GPException("Key set mismatch.");<a name="line.399"></a>
+<span class="sourceLineNo">400</span>                }<a name="line.400"></a>
+<span class="sourceLineNo">401</span><a name="line.401"></a>
+<span class="sourceLineNo">402</span>                if (scpMajorVersion == 1) {<a name="line.402"></a>
+<span class="sourceLineNo">403</span>                        sessionKeys = deriveSessionKeysSCP01(staticKeys, rand, update_response);<a name="line.403"></a>
+<span class="sourceLineNo">404</span>                } else if (scpMajorVersion == 2) {<a name="line.404"></a>
+<span class="sourceLineNo">405</span>                        byte [] seq = Arrays.copyOfRange(update_response, 12, 14);<a name="line.405"></a>
+<span class="sourceLineNo">406</span>                        sessionKeys = deriveSessionKeysSCP02(staticKeys, seq, false);<a name="line.406"></a>
+<span class="sourceLineNo">407</span>                } else {<a name="line.407"></a>
+<span class="sourceLineNo">408</span>                        throw new GPException("SCP03 is still unexplored");<a name="line.408"></a>
+<span class="sourceLineNo">409</span>                }<a name="line.409"></a>
+<span class="sourceLineNo">410</span>                verbose("Session keys: " + sessionKeys);<a name="line.410"></a>
+<span class="sourceLineNo">411</span><a name="line.411"></a>
 <span class="sourceLineNo">412</span><a name="line.412"></a>
-<span class="sourceLineNo">413</span><a name="line.413"></a>
-<span class="sourceLineNo">414</span>                ByteArrayOutputStream bo = new ByteArrayOutputStream();<a name="line.414"></a>
-<span class="sourceLineNo">415</span><a name="line.415"></a>
-<span class="sourceLineNo">416</span>                try {<a name="line.416"></a>
-<span class="sourceLineNo">417</span>                        bo.write(rand);<a name="line.417"></a>
-<span class="sourceLineNo">418</span>                        bo.write(update_response, 12, 8);<a name="line.418"></a>
-<span class="sourceLineNo">419</span>                } catch (IOException ioe) {<a name="line.419"></a>
-<span class="sourceLineNo">420</span>                        throw new RuntimeException(ioe);<a name="line.420"></a>
-<span class="sourceLineNo">421</span>                }<a name="line.421"></a>
-<span class="sourceLineNo">422</span><a name="line.422"></a>
-<span class="sourceLineNo">423</span>                byte[] myCryptogram = GPUtils.mac_3des(sessionKeys.getKey(KeyType.ENC), GPUtils.pad80(bo.toByteArray()), iv_null_bytes);<a name="line.423"></a>
-<span class="sourceLineNo">424</span><a name="line.424"></a>
-<span class="sourceLineNo">425</span>                byte[] cardCryptogram = new byte[8];<a name="line.425"></a>
-<span class="sourceLineNo">426</span>                System.arraycopy(update_response, 20, cardCryptogram, 0, 8);<a name="line.426"></a>
+<span class="sourceLineNo">413</span>                ByteArrayOutputStream bo = new ByteArrayOutputStream();<a name="line.413"></a>
+<span class="sourceLineNo">414</span><a name="line.414"></a>
+<span class="sourceLineNo">415</span>                try {<a name="line.415"></a>
+<span class="sourceLineNo">416</span>                        bo.write(rand);<a name="line.416"></a>
+<span class="sourceLineNo">417</span>                        bo.write(update_response, 12, 8);<a name="line.417"></a>
+<span class="sourceLineNo">418</span>                } catch (IOException ioe) {<a name="line.418"></a>
+<span class="sourceLineNo">419</span>                        throw new RuntimeException(ioe);<a name="line.419"></a>
+<span class="sourceLineNo">420</span>                }<a name="line.420"></a>
+<span class="sourceLineNo">421</span><a name="line.421"></a>
+<span class="sourceLineNo">422</span>                byte[] myCryptogram = GPUtils.mac_3des(sessionKeys.getKey(KeyType.ENC), GPUtils.pad80(bo.toByteArray(), 8), iv_null_bytes);<a name="line.422"></a>
+<span class="sourceLineNo">423</span><a name="line.423"></a>
+<span class="sourceLineNo">424</span>                byte[] cardCryptogram = new byte[8];<a name="line.424"></a>
+<span class="sourceLineNo">425</span>                System.arraycopy(update_response, 20, cardCryptogram, 0, 8);<a name="line.425"></a>
+<span class="sourceLineNo">426</span>                // This is the main check for successful authentication.<a name="line.426"></a>
 <span class="sourceLineNo">427</span>                if (!Arrays.equals(cardCryptogram, myCryptogram)) {<a name="line.427"></a>
-<span class="sourceLineNo">428</span>                        throw new GPException("Card cryptogram invalid.\nExp: " + GPUtils.byteArrayToString(cardCryptogram) + "\nAct: "+GPUtils.byteArrayToString(myCryptogram));<a name="line.428"></a>
+<span class="sourceLineNo">428</span>                        throw new GPException("Card cryptogram invalid.\nExp: " + GPUtils.byteArrayToString(cardCryptogram) + "\nAct: "+GPUtils.byteArrayToString(myCryptogram) + "\n!!! DO NOT RE-TRY THE SAME COMMAND/KEYS OR YOU MAY BRICK YOUR CARD !!!");<a name="line.428"></a>
 <span class="sourceLineNo">429</span>                }<a name="line.429"></a>
 <span class="sourceLineNo">430</span><a name="line.430"></a>
 <span class="sourceLineNo">431</span>                try {<a name="line.431"></a>
@@ -444,7 +444,7 @@
 <span class="sourceLineNo">436</span>                        throw new RuntimeException(ioe);<a name="line.436"></a>
 <span class="sourceLineNo">437</span>                }<a name="line.437"></a>
 <span class="sourceLineNo">438</span><a name="line.438"></a>
-<span class="sourceLineNo">439</span>                byte[] authData = GPUtils.mac_3des(sessionKeys.getKey(KeyType.ENC), GPUtils.pad80(bo.toByteArray()), iv_null_bytes);<a name="line.439"></a>
+<span class="sourceLineNo">439</span>                byte[] authData = GPUtils.mac_3des(sessionKeys.getKey(KeyType.ENC), GPUtils.pad80(bo.toByteArray(), 8), iv_null_bytes);<a name="line.439"></a>
 <span class="sourceLineNo">440</span><a name="line.440"></a>
 <span class="sourceLineNo">441</span>                wrapper = new SecureChannelWrapper(sessionKeys, scpVersion, EnumSet.of(APDUMode.MAC), null, null);<a name="line.441"></a>
 <span class="sourceLineNo">442</span><a name="line.442"></a>
@@ -474,7 +474,7 @@
 <span class="sourceLineNo">466</span>                        Cipher cipher = Cipher.getInstance("DESede/ECB/NoPadding");<a name="line.466"></a>
 <span class="sourceLineNo">467</span>                        for (KeyType v: KeyType.values()) {<a name="line.467"></a>
 <span class="sourceLineNo">468</span>                                if (v == KeyType.RMAC) continue;<a name="line.468"></a>
-<span class="sourceLineNo">469</span>                                cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(staticKeys.get3DES(v), "DESede"));<a name="line.469"></a>
+<span class="sourceLineNo">469</span>                                cipher.init(Cipher.ENCRYPT_MODE, staticKeys.get3DESKey(v));<a name="line.469"></a>
 <span class="sourceLineNo">470</span>                                sessionKeys.setKey(v, cipher.doFinal(derivationData));<a name="line.470"></a>
 <span class="sourceLineNo">471</span>                        }<a name="line.471"></a>
 <span class="sourceLineNo">472</span>                } catch (BadPaddingException e) {<a name="line.472"></a>
@@ -505,7 +505,7 @@
 <span class="sourceLineNo">497</span><a name="line.497"></a>
 <span class="sourceLineNo">498</span>                        byte[] constantMAC = new byte[] { (byte) 0x01, (byte) 0x01 };<a name="line.498"></a>
 <span class="sourceLineNo">499</span>                        System.arraycopy(constantMAC, 0, derivationData, 0, 2);<a name="line.499"></a>
-<span class="sourceLineNo">500</span>                        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(staticKeys.get3DES(KeyType.MAC), "DESede"), iv_null);<a name="line.500"></a>
+<span class="sourceLineNo">500</span>                        cipher.init(Cipher.ENCRYPT_MODE, staticKeys.get3DESKey(KeyType.MAC), iv_null);<a name="line.500"></a>
 <span class="sourceLineNo">501</span>                        sessionKeys.setKey(KeyType.MAC, cipher.doFinal(derivationData));<a name="line.501"></a>
 <span class="sourceLineNo">502</span><a name="line.502"></a>
 <span class="sourceLineNo">503</span>                        // TODO: is this correct? - increment by one for all other than C-MAC<a name="line.503"></a>
@@ -516,18 +516,18 @@
 <span class="sourceLineNo">508</span><a name="line.508"></a>
 <span class="sourceLineNo">509</span>                        byte[] constantRMAC = new byte[] { (byte) 0x01, (byte) 0x02 };<a name="line.509"></a>
 <span class="sourceLineNo">510</span>                        System.arraycopy(constantRMAC, 0, derivationData, 0, 2);<a name="line.510"></a>
-<span class="sourceLineNo">511</span>                        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(staticKeys.get3DES(KeyType.MAC), "DESede"), iv_null);<a name="line.511"></a>
+<span class="sourceLineNo">511</span>                        cipher.init(Cipher.ENCRYPT_MODE, staticKeys.get3DESKey(KeyType.MAC), iv_null);<a name="line.511"></a>
 <span class="sourceLineNo">512</span>                        sessionKeys.setKey(KeyType.RMAC, cipher.doFinal(derivationData));;<a name="line.512"></a>
 <span class="sourceLineNo">513</span><a name="line.513"></a>
 <span class="sourceLineNo">514</span><a name="line.514"></a>
 <span class="sourceLineNo">515</span>                        byte[] constantENC = new byte[] { (byte) 0x01, (byte) 0x82 };<a name="line.515"></a>
 <span class="sourceLineNo">516</span>                        System.arraycopy(constantENC, 0, derivationData, 0, 2);<a name="line.516"></a>
-<span class="sourceLineNo">517</span>                        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(staticKeys.get3DES(KeyType.ENC), "DESede"), iv_null);<a name="line.517"></a>
+<span class="sourceLineNo">517</span>                        cipher.init(Cipher.ENCRYPT_MODE, staticKeys.get3DESKey(KeyType.ENC), iv_null);<a name="line.517"></a>
 <span class="sourceLineNo">518</span>                        sessionKeys.setKey(KeyType.ENC, cipher.doFinal(derivationData));<a name="line.518"></a>
 <span class="sourceLineNo">519</span><a name="line.519"></a>
 <span class="sourceLineNo">520</span>                        byte[] constantDEK = new byte[] { (byte) 0x01, (byte) 0x81 };<a name="line.520"></a>
 <span class="sourceLineNo">521</span>                        System.arraycopy(constantDEK, 0, derivationData, 0, 2);<a name="line.521"></a>
-<span class="sourceLineNo">522</span>                        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(staticKeys.get3DES(KeyType.KEK), "DESede"), iv_null);<a name="line.522"></a>
+<span class="sourceLineNo">522</span>                        cipher.init(Cipher.ENCRYPT_MODE, staticKeys.get3DESKey(KeyType.KEK), iv_null);<a name="line.522"></a>
 <span class="sourceLineNo">523</span>                        sessionKeys.setKey(KeyType.KEK, cipher.doFinal(derivationData));<a name="line.523"></a>
 <span class="sourceLineNo">524</span><a name="line.524"></a>
 <span class="sourceLineNo">525</span>                } catch (BadPaddingException e) {<a name="line.525"></a>
@@ -641,7 +641,7 @@
 <span class="sourceLineNo">633</span>         *            (ie. no installation parameters) if null, if non-null the<a name="line.633"></a>
 <span class="sourceLineNo">634</span>         *            format is {@code 0xC9 len data...}<a name="line.634"></a>
 <span class="sourceLineNo">635</span>         */<a name="line.635"></a>
-<span class="sourceLineNo">636</span>        public void installAndMakeSelecatable(AID packageAID, AID appletAID, AID instanceAID, byte privileges, byte[] installParams,<a name="line.636"></a>
+<span class="sourceLineNo">636</span>        public void installAndMakeSelectable(AID packageAID, AID appletAID, AID instanceAID, byte privileges, byte[] installParams,<a name="line.636"></a>
 <span class="sourceLineNo">637</span>                        byte[] installToken) throws GPException, CardException {<a name="line.637"></a>
 <span class="sourceLineNo">638</span><a name="line.638"></a>
 <span class="sourceLineNo">639</span>                if (instanceAID == null) {<a name="line.639"></a>
@@ -749,29 +749,29 @@
 <span class="sourceLineNo">741</span>        }<a name="line.741"></a>
 <span class="sourceLineNo">742</span><a name="line.742"></a>
 <span class="sourceLineNo">743</span>        // FIXME: remove the withCheck parameter, as always true?<a name="line.743"></a>
-<span class="sourceLineNo">744</span>        private byte[] encodeKey(KeySet.Key key, byte []kek, boolean withCheck) {<a name="line.744"></a>
+<span class="sourceLineNo">744</span>        private byte[] encodeKey(KeySet.Key key, java.security.Key kek, boolean withCheck) {<a name="line.744"></a>
 <span class="sourceLineNo">745</span>                try {<a name="line.745"></a>
-<span class="sourceLineNo">746</span>                        ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();<a name="line.746"></a>
+<span class="sourceLineNo">746</span>                        ByteArrayOutputStream baos = new ByteArrayOutputStream();<a name="line.746"></a>
 <span class="sourceLineNo">747</span>                        // Only DES at the moment<a name="line.747"></a>
-<span class="sourceLineNo">748</span>                        bytearrayoutputstream.write(0x80);<a name="line.748"></a>
+<span class="sourceLineNo">748</span>                        baos.write(0x80);<a name="line.748"></a>
 <span class="sourceLineNo">749</span>                        // Length<a name="line.749"></a>
-<span class="sourceLineNo">750</span>                        bytearrayoutputstream.write(16);<a name="line.750"></a>
+<span class="sourceLineNo">750</span>                        baos.write(16);<a name="line.750"></a>
 <span class="sourceLineNo">751</span>                        // Encrypt key with KEK<a name="line.751"></a>
 <span class="sourceLineNo">752</span>                        Cipher cipher;<a name="line.752"></a>
 <span class="sourceLineNo">753</span>                        cipher = Cipher.getInstance("DESede/ECB/NoPadding");<a name="line.753"></a>
-<span class="sourceLineNo">754</span>                        cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(GPUtils.getKey(kek, 24), "DESede"));<a name="line.754"></a>
-<span class="sourceLineNo">755</span>                        bytearrayoutputstream.write(cipher.doFinal(key.getValue(), 0, 16));<a name="line.755"></a>
+<span class="sourceLineNo">754</span>                        cipher.init(Cipher.ENCRYPT_MODE, kek);<a name="line.754"></a>
+<span class="sourceLineNo">755</span>                        baos.write(cipher.doFinal(key.getValue(), 0, 16));<a name="line.755"></a>
 <span class="sourceLineNo">756</span>                        if (withCheck) {<a name="line.756"></a>
 <span class="sourceLineNo">757</span>                                // key check value, 3 bytes with new key over null bytes<a name="line.757"></a>
-<span class="sourceLineNo">758</span>                                bytearrayoutputstream.write(3);<a name="line.758"></a>
-<span class="sourceLineNo">759</span>                                SecretKeySpec ky = new SecretKeySpec(GPUtils.getKey(key.getValue(), 24), "DESede");<a name="line.759"></a>
+<span class="sourceLineNo">758</span>                                baos.write(3);<a name="line.758"></a>
+<span class="sourceLineNo">759</span>                                SecretKeySpec ky = new SecretKeySpec(Arrays.copyOfRange(key.getValue(), 0, 16), "DESede");<a name="line.759"></a>
 <span class="sourceLineNo">760</span>                                cipher.init(Cipher.ENCRYPT_MODE, ky);<a name="line.760"></a>
 <span class="sourceLineNo">761</span>                                byte check[] = cipher.doFinal(iv_null_bytes);<a name="line.761"></a>
-<span class="sourceLineNo">762</span>                                bytearrayoutputstream.write(check, 0, 3);<a name="line.762"></a>
+<span class="sourceLineNo">762</span>                                baos.write(check, 0, 3);<a name="line.762"></a>
 <span class="sourceLineNo">763</span>                        } else {<a name="line.763"></a>
-<span class="sourceLineNo">764</span>                                bytearrayoutputstream.write(0);<a name="line.764"></a>
+<span class="sourceLineNo">764</span>                                baos.write(0);<a name="line.764"></a>
 <span class="sourceLineNo">765</span>                        }<a name="line.765"></a>
-<span class="sourceLineNo">766</span>                        return bytearrayoutputstream.toByteArray();<a name="line.766"></a>
+<span class="sourceLineNo">766</span>                        return baos.toByteArray();<a name="line.766"></a>
 <span class="sourceLineNo">767</span>                } catch (IOException e) {<a name="line.767"></a>
 <span class="sourceLineNo">768</span>                        throw new RuntimeException(e);<a name="line.768"></a>
 <span class="sourceLineNo">769</span>                } catch (InvalidKeyException e) {<a name="line.769"></a>
@@ -818,9 +818,9 @@
 <span class="sourceLineNo">810</span>                        // Key data<a name="line.810"></a>
 <span class="sourceLineNo">811</span>                        for (Key k: keys) {<a name="line.811"></a>
 <span class="sourceLineNo">812</span>                                if (scpMajorVersion == 1) {<a name="line.812"></a>
-<span class="sourceLineNo">813</span>                                        bo.write(encodeKey(k, staticKeys.get3DES(KeyType.KEK), true));<a name="line.813"></a>
+<span class="sourceLineNo">813</span>                                        bo.write(encodeKey(k, staticKeys.get3DESKey(KeyType.KEK), true));<a name="line.813"></a>
 <span class="sourceLineNo">814</span>                                } else if (scpMajorVersion == 2) {<a name="line.814"></a>
-<span class="sourceLineNo">815</span>                                        bo.write(encodeKey(k, wrapper.sessionKeys.get3DES(KeyType.KEK), true));<a name="line.815"></a>
+<span class="sourceLineNo">815</span>                                        bo.write(encodeKey(k, wrapper.sessionKeys.get3DESKey(KeyType.KEK), true));<a name="line.815"></a>
 <span class="sourceLineNo">816</span>                                } else<a name="line.816"></a>
 <span class="sourceLineNo">817</span>                                        throw new IllegalStateException("Unknown SCP version: " + scpMajorVersion);<a name="line.817"></a>
 <span class="sourceLineNo">818</span>                        }<a name="line.818"></a>
@@ -1051,10 +1051,10 @@
 <span class="sourceLineNo">1043</span>                                                Cipher c = null;<a name="line.1043"></a>
 <span class="sourceLineNo">1044</span>                                                if (scp == 1) {<a name="line.1044"></a>
 <span class="sourceLineNo">1045</span>                                                        c = Cipher.getInstance("DESede/ECB/NoPadding");<a name="line.1045"></a>
-<span class="sourceLineNo">1046</span>                                                        c.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(sessionKeys.get3DES(KeyType.MAC), "DESede"));<a name="line.1046"></a>
+<span class="sourceLineNo">1046</span>                                                        c.init(Cipher.ENCRYPT_MODE, sessionKeys.get3DESKey(KeyType.MAC));<a name="line.1046"></a>
 <span class="sourceLineNo">1047</span>                                                } else {<a name="line.1047"></a>
 <span class="sourceLineNo">1048</span>                                                        c = Cipher.getInstance("DES/ECB/NoPadding");<a name="line.1048"></a>
-<span class="sourceLineNo">1049</span>                                                        c.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(sessionKeys.getDES(KeyType.MAC), "DES"));<a name="line.1049"></a>
+<span class="sourceLineNo">1049</span>                                                        c.init(Cipher.ENCRYPT_MODE, sessionKeys.getDESKey(KeyType.MAC));<a name="line.1049"></a>
 <span class="sourceLineNo">1050</span>                                                }<a name="line.1050"></a>
 <span class="sourceLineNo">1051</span>                                                // encrypts the future ICV ?<a name="line.1051"></a>
 <span class="sourceLineNo">1052</span>                                                icv = c.doFinal(icv);<a name="line.1052"></a>
@@ -1072,9 +1072,9 @@
 <span class="sourceLineNo">1064</span>                                        t.write(origData);<a name="line.1064"></a>
 <span class="sourceLineNo">1065</span><a name="line.1065"></a>
 <span class="sourceLineNo">1066</span>                                        if (scp == 1) {<a name="line.1066"></a>
-<span class="sourceLineNo">1067</span>                                                icv = GPUtils.mac_3des(sessionKeys.getKey(KeyType.MAC), GPUtils.pad80(t.toByteArray()), icv);<a name="line.1067"></a>
+<span class="sourceLineNo">1067</span>                                                icv = GPUtils.mac_3des(sessionKeys.getKey(KeyType.MAC), GPUtils.pad80(t.toByteArray(), 8), icv);<a name="line.1067"></a>
 <span class="sourceLineNo">1068</span>                                        } else {<a name="line.1068"></a>
-<span class="sourceLineNo">1069</span>                                                icv = GPUtils.mac_des_3des(sessionKeys.getKey(KeyType.MAC), GPUtils.pad80(t.toByteArray()), icv);<a name="line.1069"></a>
+<span class="sourceLineNo">1069</span>                                                icv = GPUtils.mac_des_3des(sessionKeys.getKey(KeyType.MAC), GPUtils.pad80(t.toByteArray(), 8), icv);<a name="line.1069"></a>
 <span class="sourceLineNo">1070</span>                                        }<a name="line.1070"></a>
 <span class="sourceLineNo">1071</span><a name="line.1071"></a>
 <span class="sourceLineNo">1072</span>                                        if (postAPDU) {<a name="line.1072"></a>
@@ -1090,17 +1090,17 @@
 <span class="sourceLineNo">1082</span>                                                t.write(origLc);<a name="line.1082"></a>
 <span class="sourceLineNo">1083</span>                                                t.write(origData);<a name="line.1083"></a>
 <span class="sourceLineNo">1084</span>                                                if ((t.size() % 8) != 0) {<a name="line.1084"></a>
-<span class="sourceLineNo">1085</span>                                                        byte[] x = GPUtils.pad80(t.toByteArray());<a name="line.1085"></a>
+<span class="sourceLineNo">1085</span>                                                        byte[] x = GPUtils.pad80(t.toByteArray(), 8);<a name="line.1085"></a>
 <span class="sourceLineNo">1086</span>                                                        t.reset();<a name="line.1086"></a>
 <span class="sourceLineNo">1087</span>                                                        t.write(x);<a name="line.1087"></a>
 <span class="sourceLineNo">1088</span>                                                }<a name="line.1088"></a>
 <span class="sourceLineNo">1089</span>                                        } else {<a name="line.1089"></a>
-<span class="sourceLineNo">1090</span>                                                t.write(GPUtils.pad80(origData));<a name="line.1090"></a>
+<span class="sourceLineNo">1090</span>                                                t.write(GPUtils.pad80(origData, 8));<a name="line.1090"></a>
 <span class="sourceLineNo">1091</span>                                        }<a name="line.1091"></a>
 <span class="sourceLineNo">1092</span>                                        newLc += t.size() - origData.length;<a name="line.1092"></a>
 <span class="sourceLineNo">1093</span><a name="line.1093"></a>
 <span class="sourceLineNo">1094</span>                                        Cipher c = Cipher.getInstance("DESede/CBC/NoPadding");<a name="line.1094"></a>
-<span class="sourceLineNo">1095</span>                                        c.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(sessionKeys.get3DES(KeyType.ENC), "DESede"), iv_null);<a name="line.1095"></a>
+<span class="sourceLineNo">1095</span>                                        c.init(Cipher.ENCRYPT_MODE, sessionKeys.get3DESKey(KeyType.ENC), iv_null);<a name="line.1095"></a>
 <span class="sourceLineNo">1096</span>                                        newData = c.doFinal(t.toByteArray());<a name="line.1096"></a>
 <span class="sourceLineNo">1097</span>                                        t.reset();<a name="line.1097"></a>
 <span class="sourceLineNo">1098</span>                                }<a name="line.1098"></a>
@@ -1148,7 +1148,7 @@
 <span class="sourceLineNo">1140</span>                                rMac.write(response.getSW1());<a name="line.1140"></a>
 <span class="sourceLineNo">1141</span>                                rMac.write(response.getSW2());<a name="line.1141"></a>
 <span class="sourceLineNo">1142</span><a name="line.1142"></a>
-<span class="sourceLineNo">1143</span>                                ricv = GPUtils.mac_des_3des(sessionKeys.getKey(KeyType.RMAC), GPUtils.pad80(rMac.toByteArray()), ricv);<a name="line.1143"></a>
+<span class="sourceLineNo">1143</span>                                ricv = GPUtils.mac_des_3des(sessionKeys.getKey(KeyType.RMAC), GPUtils.pad80(rMac.toByteArray(), 8), ricv);<a name="line.1143"></a>
 <span class="sourceLineNo">1144</span><a name="line.1144"></a>
 <span class="sourceLineNo">1145</span>                                byte[] actualMac = new byte[8];<a name="line.1145"></a>
 <span class="sourceLineNo">1146</span>                                System.arraycopy(response.getData(), respLen, actualMac, 0, 8);<a name="line.1146"></a>
