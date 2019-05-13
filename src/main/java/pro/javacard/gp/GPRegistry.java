@@ -251,19 +251,19 @@ public class GPRegistry implements Iterable<GPRegistryEntry> {
 			GPRegistryEntryPkg pkg = new GPRegistryEntryPkg();
 			if (t.isConstructed()) {
 				BerTlv aid = t.find(new BerTag(0x4f));
-				if (aid != null) {
+				if (aid != null && aid.getBytesValue().length > 0) {
 					AID aidv = new AID(aid.getBytesValue());
 					app.setAID(aidv);
 					pkg.setAID(aidv);
 				}
 				BerTlv lifecycletag = t.find(new BerTag(0x9F, 0x70));
-				if (lifecycletag != null) {
+				if (lifecycletag != null && lifecycletag.getBytesValue().length > 0) {
 					app.setLifeCycle(lifecycletag.getBytesValue()[0] & 0xFF);
 					pkg.setLifeCycle(lifecycletag.getBytesValue()[0] & 0xFF);
 				}
 
 				BerTlv privstag = t.find(new BerTag(0xC5));
-				if (privstag != null) {
+				if (privstag != null && privstag.getBytesValue().length > 0) {
 					Privileges privs = Privileges.fromBytes(privstag.getBytesValue());
 					app.setPrivileges(privs);
 				}
@@ -273,11 +273,11 @@ public class GPRegistry implements Iterable<GPRegistryEntry> {
 				}
 
 				BerTlv loadfiletag = t.find(new BerTag(0xC4));
-				if (loadfiletag != null) {
+				if (loadfiletag != null && loadfiletag.getBytesValue().length > 0) {
 					app.setLoadFile(new AID(loadfiletag.getBytesValue()));
 				}
 				BerTlv versiontag = t.find(new BerTag(0xCE));
-				if (versiontag != null) {
+				if (versiontag != null && versiontag.getBytesValue().length > 0) {
 					pkg.setVersion(versiontag.getBytesValue());
 				}
 
@@ -286,7 +286,7 @@ public class GPRegistry implements Iterable<GPRegistryEntry> {
 				}
 
 				BerTlv domaintag = t.find(new BerTag(0xCC));
-				if (domaintag != null) {
+				if (domaintag != null && domaintag.getBytesValue().length > 0) {
 					app.setDomain(new AID(domaintag.getBytesValue()));
 					pkg.setDomain(new AID(domaintag.getBytesValue()));
 				}
